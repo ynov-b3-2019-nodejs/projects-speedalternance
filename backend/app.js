@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 
 app.use((req, res, next) => {
-  console.log('regarde mon middleware');
+  console.log('regar mon middleware');
   next();
 });
 
