@@ -1,0 +1,24 @@
+{
+  "name": "projects-speedalternance",
+  "version": "1.0.0",
+  "description": "projects-speedalternance created by GitHub Classroom",
+  "main": "server.js",
+  "scripts": {
+    "start:server": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ynov-b3-2019-nodejs/projects-speedalternance.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ynov-b3-2019-nodejs/projects-speedalternance/issues"
+  },
+  "homepage": "https://github.com/ynov-b3-2019-nodejs/projects-speedalternance#readme",
+  "dependencies": {
+    "express": "^4.17.0",
+    "nodemon": "^1.19.0"
+  }
+}
