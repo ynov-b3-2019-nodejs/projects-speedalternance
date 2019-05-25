@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start:server": "nodemon server.js",
-    "test": "jest"
+    "test": "jest",
+    "build": "npm install && cd frontend && yarn install"
   },
   "repository": {
     "type": "git",
