@@ -1,8 +1,20 @@
 const express = require('express');
 const app = express();
-
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
+const mongoose = require('mongoose');
+
+mongoose
+  .connect(
+    'mongodb+srv://birametgod:ID6nlTZu07PYxCbd@cluster0-c7tiq.mongodb.net/spreedAlternance',
+    { useCreateIndex: true, useNewUrlParser: true }
+  )
+  .then(() => {
+    console.log(`connected to database`);
+  })
+  .catch(() => {
+    console.log('Connection failed !');
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
