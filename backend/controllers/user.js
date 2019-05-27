@@ -1,21 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-exports.getUser = (req, res, next) => {
-  User.find((err, result) => {
-    if (err) {
-      return res.status(500).json({
-        message: 'sign up failed',
-        err
-      });
-    }
-    return res.status(200).json({
-      message: 'user done',
-      result
-    });
-  });
-};
-
 exports.signUp = (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
     // 10 valeur la plus grande pour obtenir un hash securisée
