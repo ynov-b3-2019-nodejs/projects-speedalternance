@@ -48,10 +48,10 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-primary">
+        <div class="buttons" v-if="!isLogin">
+          <button class="button is-primary" @click="signup">
             <strong>Sign up</strong>
-          </a>
+          </button>
           <a class="button is-light">
             Log in
           </a>
@@ -64,9 +64,14 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Header',
   props: {
-    msg: String
+    isLogin: Boolean
+  },
+  methods: {
+    signup() {
+      this.$emit('signup')
+    }
   }
 }
 </script>
