@@ -7,7 +7,9 @@ const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
   file: String,
   picture: String,
-  competencies: [String]
+  competencies: [String],
+  isStudent: { type: Boolean, required: true },
+  isBoss: { type: Boolean, required: true }
 });
 
 module.exports = mongoose.model('User', userSchema);
