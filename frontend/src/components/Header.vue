@@ -1,10 +1,10 @@
 <template>
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <a class="navbar-item" href="/">
+    <router-link class="navbar-item" to="/">
       <img src="/favicon.png" type="image/png">
       <h1 style="color: black;"> Speed Alternance</h1>
-    </a>
+    </router-link>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -16,49 +16,27 @@
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
       <a class="navbar-item">
-        Home
+        Accueil
       </a>
 
       <a class="navbar-item">
-        Documentation
+        Annonces
       </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More
-        </a>
-
-        <div class="navbar-dropdown">
-          <a class="navbar-item">
-            About
-          </a>
-          <a class="navbar-item">
-            Jobs
-          </a>
-          <a class="navbar-item">
-            Contact
-          </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            Report an issue
-          </a>
-        </div>
-      </div>
     </div>
 
     <div class="navbar-end">
       <div class="navbar-item">
         <div class="buttons" v-if="!isLogin">
-          <button class="button is-primary" @click="signup">
-            <strong>Sign up</strong>
-          </button>
+          <router-link class="button is-primary" to='/signup'>
+            <strong>Inscription</strong>
+          </router-link>
           <button class="button is-light" @click="loginModal">
-            Log in
+            Connexion
           </button>
         </div>
         <div class="buttons" v-if="isLogin">
           <button class="button is-danger" @click="signout">
-            <strong>Sign out</strong>
+            <strong>Deconnexion</strong>
           </button>
           <a class="button is-light">
             Profile
