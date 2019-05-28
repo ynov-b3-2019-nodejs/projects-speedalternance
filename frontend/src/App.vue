@@ -1,37 +1,96 @@
 <template>
   <div id="app">
-    <Header :isLogin="logged" msg="Welcome to Your Vue.js App" @signup="signUpAction"/>
-    <Signup v-if="signup" ></Signup>
+    <Header
+      :isLogin="logged"
+      msg="Welcome to Your Vue.js App"
+      @spawnSignup="spawnSignup = true"
+      @spawnLogin="spawnLogin = true"
+      @signOut="signOutAction"
+    />
+    <Signup v-if="spawnSignup" @trySingUp="signUpAction"></Signup>
+    <Login v-if="spawnLogin" @tryLogin="loginAction"></Login>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
-import Signup from './components/SignUp.vue'
+import Header from "./components/Header.vue";
+import Signup from "./components/SignUp.vue";
+import Login from "./components/Login.vue";
+import UserService from "./services/User";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     Header,
-    Signup
+    Signup,
+    Login
   },
   data() {
     return {
-      signup: false,
-      logged: localStorage.acces_token ? true : false
-    }
+      spawnSignup: false,
+      spawnLogin: false,
+      logged: localStorage.access_token ? true : false
+    };
   },
   methods: {
-    signUpAction() {
-      this.signup = true;
+    signUpAction(user) {
+      UserService.signUp(user)
+        .then(() => {
+          this.$toast.open({
+            duration: 5000,
+            message: `Content de vous acceuillir parmis nous ${
+              user.firstname
+            } ${user.name}`,
+            type: "is-success"
+          });
+          this.spawnSignup = false;
+          this.logged = true;
+        })
+        .catch(err => {
+          this.err = err;
+          this.$toast.open({
+            duration: 5000,
+            message: "Une erreur est survenue",
+            type: "is-danger"
+          });
+        });
+    },
+    signOutAction() {
+      localStorage.removeItem("access_token");
+      this.logged = false;
+      this.$toast.open({
+        duration: 5000,
+        message: `A bientot !`,
+        type: "is-danger"
+      });
+    },
+    loginAction(login) {
+      UserService.login(login)
+        .then(() => {
+          this.$toast.open({
+            duration: 5000,
+            message: `Content de vous acceuillir parmis nous ${login.firstname} ${login.name}`,
+            type: "is-success"
+          });
+          this.spawnLogin = false;
+          this.logged = true;
+        })
+        .catch(err => {
+          this.err = err;
+          this.$toast.open({
+            duration: 5000,
+            message: "Une erreur est survenue",
+            type: "is-danger"
+          });
+        });
     }
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

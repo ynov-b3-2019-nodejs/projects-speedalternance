@@ -7,7 +7,7 @@
             </b-field>
 
             <b-field label="Nom" class="column">
-                <b-input v-model="user.lastname"></b-input>
+                <b-input v-model="user.name"></b-input>
             </b-field>
 
             <b-field label="Email" class="column">
@@ -19,7 +19,7 @@
             </b-field>
 
             <b-field label="Quel est votre profil ?" class="column">
-                <b-select v-model="isStudent" placeholder="Etudiant">
+                <b-select v-model="isStudientString" placeholder="Etudiant">
                     <option value="true">Etudiant</option>
                     <option value="false">Professionel</option>
                 </b-select>
@@ -29,48 +29,43 @@
             <b-field label="Password" class="column">
                 <b-input v-model="user.password" type="password" maxlength="30"></b-input>
             </b-field>
-            <b-field label="Confirmez votre Password" class="column">
-                <b-input v-model="passwordConfirmation" type="password" maxlength="30"></b-input>
-            </b-field>
         </div>
 
-        <button class="button is-success">S'inscrire</button>
+        <button class="button is-success" @click="submitSignUp">S'inscrire</button>
 
     </section>
 </template>
 
 <script>
-import UserService from '../services/User';
-
 export default {
-  name: 'Header',
+  name: 'SignUp',
   props: {
     msg: String,
-    login: Boolean
+    login: Boolean,
+    isStudent : Boolean
   },
   data(){
         return {
             user:  {
-                lastname: '',
+                name: '',
                 firstname: '',
                 password: '',
                 email: '',
-                isStudent: '',
-                competencies: []
-            }
+                isStudent: false
+            },
+            err: '',
+            isStudientString: false
         }
   },
   methods: {
     submitSignUp(){
-        UserService.signUp(this.user)
-            .then((response) => {
-                localStorage.setItem('access_token',response.data.acces_token)
-            })
+        this.isStudientString === "true" ? this.user.isStudent = true : this.user.isStudent = false
+        this.$emit('trySingUp',this.user)
     }
   },
   computed: {
       autoEmail(){
-          return  this.user.firstname.toLowerCase() + '.' + this.user.lastname.toLowerCase()  + "@ynov.com"
+          return  this.user.firstname.toLowerCase() + '.' + this.user.name.toLowerCase()  + "@ynov.com"
       }
   }
 }
