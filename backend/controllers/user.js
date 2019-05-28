@@ -56,7 +56,8 @@ exports.signUp = (req, res, next) => {
       picture: req.body.picture, // même chose pour ici
       competencies: req.body.competencies,
       isStudent: req.body.isStudent,
-      isBoss: !req.body.isStudent
+      isBoss: !req.body.isStudent,
+      isConnected: true
     });
     user
       .save()

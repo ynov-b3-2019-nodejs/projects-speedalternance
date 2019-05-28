@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
+const chatRoutes = require('./routes/chat');
 const mongoose = require('mongoose');
 
 mongoose
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/api/user', userRoutes);
+app.use('/api/chatRoom', chatRoutes);
 app.use('/', (req, res) => {
   return res.status(200).json({
     testing: 'good'
