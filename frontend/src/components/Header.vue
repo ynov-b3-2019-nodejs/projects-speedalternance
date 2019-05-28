@@ -52,7 +52,7 @@
           <button class="button is-primary" @click="signup">
             <strong>Sign up</strong>
           </button>
-          <button class="button is-light" @click="login">
+          <button class="button is-light" @click="loginModal">
             Log in
           </button>
         </div>
@@ -71,8 +71,13 @@
 </template>
 
 <script>
+import LoginModal from './Login'
+
 export default {
   name: 'Header',
+  component: {
+    LoginModal
+  },
   props: {
     isLogin: Boolean
   },
@@ -83,8 +88,15 @@ export default {
     signout(){
       this.$emit('signOut')
     },
-    login(){
-      this.$emit('spawnLogin')
+    loginModal() {
+      this.$modal.open({
+          parent: this,
+          component: LoginModal,
+          hasModalCard: true,
+          events: {'login': (login) => {
+            this.$emit('login',login)
+          }}
+      })
     }
   }
 }
