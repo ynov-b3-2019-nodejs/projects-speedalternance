@@ -8,7 +8,7 @@
       @signOut="signOutAction"
       @login="loginAction"
     />
-    <Signup v-if="spawnSignup" @trySingUp="signUpAction"></Signup>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,6 +16,7 @@
 import Header from "./components/Header.vue";
 import Signup from "./components/SignUp.vue";
 import UserService from "./services/User";
+import EventBus from './EventBus'
 
 export default {
   name: "app",
@@ -30,6 +31,9 @@ export default {
       logged: localStorage.access_token ? true : false
     };
   },
+  mounted() {
+    EventBus.$on('signup', this.signUpAction);
+  },
   methods: {
     signUpAction(user) {
       UserService.signUp(user)
@@ -43,12 +47,14 @@ export default {
           });
           this.spawnSignup = false;
           this.logged = true;
+          router.push('/')
         })
         .catch(err => {
           this.err = err;
           this.$toast.open({
             duration: 5000,
-            message: "Une erreur est survenue",
+            message: err,
+            // message: "Une erreur est survenue",
             type: "is-danger"
           });
         });
@@ -58,7 +64,8 @@ export default {
       this.logged = false;
       this.$toast.open({
         duration: 5000,
-        message: `A bientot !`,
+        message: err,
+        //message: `A bientot !`,
         type: "is-danger"
       });
     },
