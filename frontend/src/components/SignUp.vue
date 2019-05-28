@@ -1,6 +1,7 @@
 <template>
     <section class="container">
-        <h2 class="title">Formulaire Inscription</h2>
+        <form @submit.prevent="submitSignUp">
+            <h2 class="title">Formulaire Inscription</h2>
         <div class="columns">
             <b-field label="Prenom" class="column">
                 <b-input v-model="user.firstname"></b-input>
@@ -31,12 +32,15 @@
             </b-field>
         </div>
 
-        <button class="button is-success" @click="submitSignUp">S'inscrire</button>
-
+        <button class="button is-success" type="submit">S'inscrire</button>
+        </form>
     </section>
 </template>
 
 <script>
+import EventBus from '../EventBus'
+
+
 export default {
   name: 'SignUp',
   props: {
@@ -60,7 +64,7 @@ export default {
   methods: {
     submitSignUp(){
         this.isStudientString === "true" ? this.user.isStudent = true : this.user.isStudent = false
-        this.$emit('trySingUp',this.user)
+        EventBus.$emit('signup',this.user)
     }
   },
   computed: {

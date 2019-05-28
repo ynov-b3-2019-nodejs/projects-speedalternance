@@ -12,7 +12,8 @@
     "axios-progress-bar": "^1.2.0",
     "buefy": "^0.7.6",
     "core-js": "^2.6.5",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-router": "^3.0.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
