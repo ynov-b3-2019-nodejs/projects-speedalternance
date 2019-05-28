@@ -2,6 +2,16 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
+exports.getUser = async (req, res, next) => {
+  const allUser = await User.find({});
+  if (!allUser) {
+    return res.status(404).json({
+      message: 'not Found'
+    });
+  }
+  return res.status(200).json(allUser);
+};
+
 exports.login = (req, res, next) => {
   let userFetched;
   User.findOne({ email: req.body.email }, (error, result) => {
@@ -57,7 +67,7 @@ exports.signUp = (req, res, next) => {
       competencies: req.body.competencies,
       isStudent: req.body.isStudent,
       isBoss: !req.body.isStudent,
-      isConnected: true
+      isConnected: req.body.isConnected
     });
     user
       .save()

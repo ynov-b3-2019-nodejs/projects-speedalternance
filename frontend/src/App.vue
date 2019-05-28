@@ -9,19 +9,24 @@
       @login="loginAction"
     />
     <Signup v-if="spawnSignup" @trySingUp="signUpAction"></Signup>
+    <ChatList></ChatList>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
 import Signup from "./components/SignUp.vue";
+import ChatList from "./components/ChatList.vue";
 import UserService from "./services/User";
+import ChatRoom from "./components/ChatRoom.vue";
 
 export default {
   name: "app",
   components: {
     Header,
-    Signup
+    Signup,
+    ChatList,
+    ChatRoom
   },
   data() {
     return {
@@ -67,7 +72,9 @@ export default {
         .then(() => {
           this.$toast.open({
             duration: 5000,
-            message: `Content de vous revoir parmis nous ${login.firstname} ${login.name}`,
+            message: `Content de vous revoir parmis nous ${login.firstname} ${
+              login.name
+            }`,
             type: "is-success"
           });
           this.spawnLogin = false;
