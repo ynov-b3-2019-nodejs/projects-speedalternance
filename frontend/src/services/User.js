@@ -8,7 +8,7 @@ class UserService {
 
     static signUp(user){
         return axios
-            .post(`/signup`,user)
+            .post('/signup',user)
             .then((res) => {
                 localStorage.setItem("access_token", res.data.access_token);
             })

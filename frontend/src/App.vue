@@ -6,24 +6,22 @@
       @spawnSignup="spawnSignup = true"
       @spawnLogin="spawnLogin = true"
       @signOut="signOutAction"
+      @login="loginAction"
     />
     <Signup v-if="spawnSignup" @trySingUp="signUpAction"></Signup>
-    <Login v-if="spawnLogin" @tryLogin="loginAction"></Login>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
 import Signup from "./components/SignUp.vue";
-import Login from "./components/Login.vue";
 import UserService from "./services/User";
 
 export default {
   name: "app",
   components: {
     Header,
-    Signup,
-    Login
+    Signup
   },
   data() {
     return {
@@ -69,7 +67,7 @@ export default {
         .then(() => {
           this.$toast.open({
             duration: 5000,
-            message: `Content de vous acceuillir parmis nous ${login.firstname} ${login.name}`,
+            message: `Content de vous revoir parmis nous ${login.firstname} ${login.name}`,
             type: "is-success"
           });
           this.spawnLogin = false;

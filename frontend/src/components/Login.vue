@@ -1,44 +1,56 @@
 <template>
-    <section class="container">
-        <h2 class="title">Connexion</h2>
-        <div class="">
-            <b-field label="Email" class="">
-                <b-input type="email"
-                    v-model="login.email"
-                    :placeholder="autoEmail"
-                    maxlength="30">
-                </b-input>
-            </b-field>
-            <div class="">
-                <b-field label="Password" class="column">
-                    <b-input v-model="login.password" type="password" maxlength="30"></b-input>
+    <form @submit.prevent="submitLogin">
+        <div class="modal-card" style="width: auto">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Login</p>
+            </header>
+            <section class="modal-card-body">
+                <b-field label="Email">
+                    <b-input
+                        type="email"
+                        v-model="login.email"
+                        placeholder="Your email"
+                        required>
+                    </b-input>
                 </b-field>
-            </div>
+
+                <b-field label="Password">
+                    <b-input
+                        type="password"
+                        v-model="login.password"
+                        password-reveal
+                        placeholder="Your password"
+                        required>
+                    </b-input>
+                </b-field>
+
+                <b-checkbox>Remember me</b-checkbox>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button" type="button" @click="$parent.close()">Close</button>
+                <button class="button is-primary" type="submit">Login</button>
+            </footer>
         </div>
-
-
-        <button class="button is-success" @click="submitLogin">Se connecter</button>
-
-    </section>
+    </form>
 </template>
 
 <script>
 export default {
-  name: 'Login',
-  props: {},
-  data(){
-    return{
-        login: {
-            email: '',
-            password:''
+    name: 'LoginModal',
+    data(){
+        return{
+            login: {
+                email: '',
+                password:''
+            }
+        }
+    },
+    methods: {
+        submitLogin(){
+            this.$emit('login',this.login)
+            this.$parent.close()
         }
     }
-  },
-  method: {
-      submitLogin(){
-          this.$emit('login',login)
-      }
-  }
 }
 </script>
 
