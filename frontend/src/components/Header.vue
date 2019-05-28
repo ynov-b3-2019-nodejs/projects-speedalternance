@@ -52,8 +52,16 @@
           <button class="button is-primary" @click="signup">
             <strong>Sign up</strong>
           </button>
-          <a class="button is-light">
+          <button class="button is-light" @click="login">
             Log in
+          </button>
+        </div>
+        <div class="buttons" v-if="isLogin">
+          <button class="button is-danger" @click="signout">
+            <strong>Sign out</strong>
+          </button>
+          <a class="button is-light">
+            Profile
           </a>
         </div>
       </div>
@@ -70,7 +78,13 @@ export default {
   },
   methods: {
     signup() {
-      this.$emit('signup')
+      this.$emit('spawnSignup')
+    },
+    signout(){
+      this.$emit('signOut')
+    },
+    login(){
+      this.$emit('spawnLogin')
     }
   }
 }
