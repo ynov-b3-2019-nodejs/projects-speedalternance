@@ -9,40 +9,39 @@
       @login="loginAction"
     />
     <router-view></router-view>
-    <ChatList></ChatList>
+    <ChatList :isUserConnected="userConnected"></ChatList>
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
-import Signup from "./components/SignUp.vue";
 import ChatList from "./components/ChatList.vue";
 import UserService from "./services/User";
 import ChatRoom from "./components/ChatRoom.vue";
-import EventBus from './EventBus'
+import EventBus from "./EventBus";
 
 export default {
   name: "app",
   components: {
     Header,
-    Signup,
     ChatList,
     ChatRoom
   },
   data() {
     return {
+      userConnected: {},
       spawnSignup: false,
       spawnLogin: false,
       logged: localStorage.access_token ? true : false
     };
   },
   mounted() {
-    EventBus.$on('signup', this.signUpAction);
+    EventBus.$on("signup", this.signUpAction);
   },
   methods: {
     signUpAction(user) {
       UserService.signUp(user)
-        .then(() => {
+        .then(response => {
           this.$toast.open({
             duration: 5000,
             message: `Content de vous acceuillir parmis nous ${
@@ -52,7 +51,8 @@ export default {
           });
           this.spawnSignup = false;
           this.logged = true;
-          router.push('/')
+          this.userConnected = response.data.user;
+          router.push("/");
         })
         .catch(err => {
           this.err = err;
@@ -69,14 +69,13 @@ export default {
       this.logged = false;
       this.$toast.open({
         duration: 5000,
-        message: err,
-        //message: `A bientot !`,
+        message: `A bientot !`,
         type: "is-danger"
       });
     },
     loginAction(login) {
       UserService.login(login)
-        .then(() => {
+        .then(response => {
           this.$toast.open({
             duration: 5000,
             message: `Content de vous revoir parmis nous ${login.firstname} ${
@@ -86,6 +85,7 @@ export default {
           });
           this.spawnLogin = false;
           this.logged = true;
+          this.userConnected = response.data.user;
         })
         .catch(err => {
           this.err = err;

@@ -1,4 +1,4 @@
-const Chat = require('../models/chat');
+const Chat = require('../models/chatRoom');
 
 exports.getChat = async (req, res, next) => {
   const allChat = await Chat.find({});
@@ -21,11 +21,13 @@ exports.getCurrentChat = async (req, res, next) => {
 
 exports.createChat = (req, res, next) => {
   const chat = new Chat({
-    sender_id: req.body.sender_id,
-    receiver_id: req.body.receiver_id,
-    message: req.body.message
+    sender_id: req.body.sender,
+    receiver_id: req.body.receiver,
+    emit_by: req.body.emitBy,
+    content: req.body.content
   });
   chat
+    .save()
     .then(result => {
       res.status(200).json({
         chat: result

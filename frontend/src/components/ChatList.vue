@@ -15,6 +15,9 @@
 import UserService from "../services/User";
 export default {
   name: "ChatList",
+  props: {
+    isUserConnected: {}
+  },
   data() {
     return {
       connectedUser: [],
@@ -55,6 +58,16 @@ export default {
       .catch(error => {
         this.err = error.message;
       });
+  },
+  methods: {
+    openChatRoom(receiver_id) {
+      const chatRoom = {
+        receiver: receiver_id,
+        sender: this.isConnected._id,
+        emitBy: this.isConnected.firstname,
+        content: `${this.isConnected.firstname} est en train d'ecrire ... `
+      };
+    }
   }
 };
 </script>

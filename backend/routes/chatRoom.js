@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
-const chatControllers = require('../controllers/chat');
+const chatControllers = require('../controllers/chatRoom');
 
 router.get('/', checkAuth, chatControllers.getChat);
 router.get('/:id', checkAuth, chatControllers.getCurrentChat);
