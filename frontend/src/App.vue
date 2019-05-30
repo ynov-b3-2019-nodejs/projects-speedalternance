@@ -36,13 +36,13 @@ export default {
     signUpAction(user) {
       UserService.signUp(user)
         .then(() => {
-          this.$toast.open({
-            duration: 5000,
-            message: `Content de vous acceuillir parmis nous ${
-              user.firstname
-            } ${user.name}`,
-            type: "is-success"
-          });
+          this.$snackbar.open({
+                    message: `Content de vous acceuillir parmis nous!`,
+                    type: 'is-success',
+                    position: 'is-top-right',
+                    actionText: 'ok',
+                    indefinite: true,
+                });
           this.spawnSignup = false;
           this.logged = true;
           this.$router.push('/')
