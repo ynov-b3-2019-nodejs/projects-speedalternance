@@ -16,10 +16,7 @@ class UserService {
 
     static login(login){
         return axios
-            .post('/login',login)
-            .then((res) => {
-                localStorage.setItem("access_token", res.data.access_token);
-            })
+            .post('/login',login);
     }
 }
 
