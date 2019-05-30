@@ -14,15 +14,13 @@
 
 <script>
 import Header from "./components/Header.vue";
-import Signup from "./components/SignUp.vue";
 import UserService from "./services/User";
 import EventBus from './EventBus'
 
 export default {
   name: "app",
   components: {
-    Header,
-    Signup
+    Header
   },
   data() {
     return {
@@ -38,16 +36,16 @@ export default {
     signUpAction(user) {
       UserService.signUp(user)
         .then(() => {
-          this.$toast.open({
-            duration: 5000,
-            message: `Content de vous acceuillir parmis nous ${
-              user.firstname
-            } ${user.name}`,
-            type: "is-success"
-          });
+          this.$snackbar.open({
+                    message: `Content de vous acceuillir parmis nous!`,
+                    type: 'is-success',
+                    position: 'is-top-right',
+                    actionText: 'ok',
+                    indefinite: true,
+                });
           this.spawnSignup = false;
           this.logged = true;
-          router.push('/')
+          this.$router.push('/')
         })
         .catch(err => {
           this.err = err;
@@ -64,21 +62,22 @@ export default {
       this.logged = false;
       this.$toast.open({
         duration: 5000,
-        message: err,
-        //message: `A bientot !`,
+        message: `A bientot !`,
         type: "is-danger"
       });
     },
     loginAction(login) {
       UserService.login(login)
-        .then(() => {
+        .then(res => {
+          localStorage.setItem("access_token", res.data.access_token);
           this.$toast.open({
             duration: 5000,
-            message: `Content de vous revoir parmis nous ${login.firstname} ${login.name}`,
+            message: `Content de vous revoir parmis nous ${res.data.user.firstname} ${res.data.user.name}`,
             type: "is-success"
           });
           this.spawnLogin = false;
           this.logged = true;
+          this.$router.push('/')
         })
         .catch(err => {
           this.err = err;
