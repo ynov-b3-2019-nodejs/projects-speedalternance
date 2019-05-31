@@ -2,14 +2,15 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
-exports.getUser = async (req, res, next) => {
-  const allUser = await User.find({});
-  if (!allUser) {
-    return res.status(404).json({
-      message: 'not Found'
-    });
-  }
-  return res.status(200).json(allUser);
+exports.getUser = (req, res, next) => {
+  User.find({}, (err, result) => {
+    if (err) {
+      return res.status(401).json({
+        message: err.message
+      });
+    }
+    return res.status(200).json(result);
+  });
 };
 
 exports.login = (req, res, next) => {
@@ -37,12 +38,22 @@ exports.login = (req, res, next) => {
           expiresIn: '1h'
         }
       );
-
       if (hash) {
+        const user = {
+          competencies: userFetched.competencies,
+          email: userFetched.email,
+          file: userFetched.file,
+          firstname: userFetched.firstname,
+          isBoss: userFetched.isBoss,
+          isConnected: userFetched.isConnected,
+          isStudent: userFetched.isConnected,
+          name: userFetched.name,
+          picture: userFetched.picture
+        };
         res.status(200).json({
           message: 'Auth good',
-          user: userFetched,
-          token: token,
+          user,
+          access_token: token,
           expiresIn: 3600
         });
       } else {
@@ -79,9 +90,20 @@ exports.signUp = (req, res, next) => {
             expiresIn: '1h'
           }
         );
+        const user = {
+          competencies: result.competencies,
+          email: result.email,
+          file: result.file,
+          firstname: result.firstname,
+          isBoss: result.isBoss,
+          isConnected: result.isConnected,
+          isStudent: result.isConnected,
+          name: result.name,
+          picture: result.picture
+        };
         res.status(200).json({
           message: 'user created',
-          user: result,
+          user,
           access_token: token
         });
       })

@@ -8,15 +8,11 @@ axios.defaults.headers.common['Authorization'] = localStorage.access_token
 
 class UserService {
   static signUp(user) {
-    return axios.post('/signup', user).then(res => {
-      localStorage.setItem('access_token', res.data.access_token);
-    });
+    return axios.post('/signup', user);
   }
 
   static login(login) {
-    return axios.post('/login', login).then(res => {
-      localStorage.setItem('access_token', res.data.access_token);
-    });
+    return axios.post('/login', login);
   }
 
   static getUser() {

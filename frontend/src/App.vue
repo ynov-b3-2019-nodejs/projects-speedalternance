@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      userConnected: {},
+      userConnected: JSON.parse(localStorage.getItem("user")),
       spawnSignup: false,
       spawnLogin: false,
       logged: localStorage.access_token ? true : false
@@ -49,9 +49,11 @@ export default {
             } ${user.name}`,
             type: "is-success"
           });
+          localStorage.setItem("access_token", response.data.access_token);
+          localStorage.setItem("user", response.data.user);
           this.spawnSignup = false;
           this.logged = true;
-          this.userConnected = response.data.user;
+          this.userConnected = localStorage.getItem("user");
           router.push("/");
         })
         .catch(err => {
@@ -66,6 +68,7 @@ export default {
     },
     signOutAction() {
       localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
       this.logged = false;
       this.$toast.open({
         duration: 5000,
@@ -83,9 +86,10 @@ export default {
             }`,
             type: "is-success"
           });
+          localStorage.setItem("access_token", response.data.access_token);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
           this.spawnLogin = false;
           this.logged = true;
-          this.userConnected = response.data.user;
         })
         .catch(err => {
           this.err = err;
