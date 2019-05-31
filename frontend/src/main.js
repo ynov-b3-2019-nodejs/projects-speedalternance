@@ -7,10 +7,12 @@ import App from './App'
 
 import SignUp from './components/SignUp'
 import HomePage from './components/Homepage'
+import Post from './components/Post'
 
 Vue.config.productionTip = false
 Vue.config.$http = Axios
-Vue.use(Buefy)
+
+Vue.use(Buefy);
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -25,6 +27,11 @@ const router = new VueRouter({
       path: '/',
       component: HomePage,
       name: 'root'
+    },
+    {
+      path: '/annonces',
+      component: Post,
+      name: 'post'
     }
   ]
 })

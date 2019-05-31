@@ -19,9 +19,9 @@
         Accueil
       </router-link>
 
-      <a class="navbar-item">
+      <router-link class="navbar-item" to="/annonces">
         Annonces
-      </a>
+      </router-link>
     </div>
 
     <div class="navbar-end">
