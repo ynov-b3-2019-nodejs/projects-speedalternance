@@ -1,7 +1,9 @@
 <template>
-  <div></div>
+  <div>hello all My niggas</div>
 </template>
 
 <script>
-export default {};
+export default {
+  name: "ChatRoom"
+};
 </script>

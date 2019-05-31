@@ -53,7 +53,10 @@ export default {
           localStorage.setItem("user", response.data.user);
           this.spawnSignup = false;
           this.logged = true;
-          this.userConnected = localStorage.getItem("user");
+          this.userConnected = JSON.parse(localStorage.getItem("user"));
+          this.$nextTick(() => {
+            this.userConnected = JSON.parse(localStorage.getItem("user"));
+          });
           router.push("/");
         })
         .catch(err => {
@@ -69,6 +72,10 @@ export default {
     signOutAction() {
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");
+      this.userConnected = {};
+      this.$nextTick(() => {
+        this.userConnected = {};
+      });
       this.logged = false;
       this.$toast.open({
         duration: 5000,
@@ -88,6 +95,10 @@ export default {
           });
           localStorage.setItem("access_token", response.data.access_token);
           localStorage.setItem("user", JSON.stringify(response.data.user));
+          this.userConnected = JSON.parse(localStorage.getItem("user"));
+          this.$nextTick(() => {
+            this.userConnected = JSON.parse(localStorage.getItem("user"));
+          });
           this.spawnLogin = false;
           this.logged = true;
         })

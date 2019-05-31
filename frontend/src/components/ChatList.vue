@@ -6,12 +6,13 @@
         <b-table-column label="Name">{{props.row.name}}</b-table-column>
         <b-table-column label="Email">{{props.row.email}}</b-table-column>
         <b-table-column label="isConnected">{{props.row.isConnected}}</b-table-column>
-        <b-button type="is-success">Join</b-button>
+        <b-button @click="openChatRoom(props.row._id)" type="is-success">Join</b-button>
       </template>
     </b-table>
   </div>
 </template>
 <script>
+import ChatService from "../services/Chat";
 import UserService from "../services/User";
 export default {
   name: "ChatList",
@@ -63,10 +64,20 @@ export default {
     openChatRoom(receiver_id) {
       const chatRoom = {
         receiver: receiver_id,
-        sender: this.isConnected._id,
-        emitBy: this.isConnected.firstname,
-        content: `${this.isConnected.firstname} est en train d'ecrire ... `
+        sender: this.isUserConnected._id,
+        emitBy: this.isUserConnected.firstname,
+        content: `${this.isUserConnected.firstname} est en train d'ecrire ... `
       };
+      ChatService.createChat(chatRoom)
+        .then(response => {
+          this.$router.push({
+            name: "ChatRoom",
+            params: { id: response.data.chat._id }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

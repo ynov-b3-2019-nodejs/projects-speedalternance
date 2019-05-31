@@ -40,6 +40,7 @@ exports.login = (req, res, next) => {
       );
       if (hash) {
         const user = {
+          _id: userFetched._id,
           competencies: userFetched.competencies,
           email: userFetched.email,
           file: userFetched.file,
@@ -91,6 +92,7 @@ exports.signUp = (req, res, next) => {
           }
         );
         const user = {
+          _id: result._id,
           competencies: result.competencies,
           email: result.email,
           file: result.file,
