@@ -14,6 +14,8 @@
 <script>
 import ChatService from "../services/Chat";
 import UserService from "../services/User";
+import * as io from "socket.io-client";
+
 export default {
   name: "ChatList",
   props: {
@@ -24,6 +26,7 @@ export default {
       connectedUser: [],
       disconnectedUser: [],
       user: [],
+      socket: io("http://localhost:4000"),
       err: "",
       columns: [
         {
@@ -72,11 +75,11 @@ export default {
         .then(response => {
           this.$router.push({
             name: "ChatRoom",
-            params: { id: response.data.chat._id }
+            params: { id: response.data.chat._id, receiver_id }
           });
         })
         .catch(err => {
-          console.log(err);
+          this.err = err.message;
         });
     }
   }

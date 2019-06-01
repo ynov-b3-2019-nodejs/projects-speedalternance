@@ -6,11 +6,11 @@
         <b-table-column label="name">{{props.row.emit_by}}</b-table-column>
       </template>
     </b-table>
-    <form class="chatForm">
+    <form @submit="sendMessage" class="chatForm">
       <b-field grouped>
-        <b-input placeholder expanded></b-input>
+        <b-input v-model="content" placeholder expanded></b-input>
         <p class="control">
-          <button class="button is-success">SEND</button>
+          <button type="submit" class="button is-success">SEND</button>
         </p>
       </b-field>
     </form>
@@ -19,12 +19,17 @@
 
 <script>
 import ChatService from "../services/Chat";
+import * as io from "socket.io-client";
+
 export default {
   name: "ChatRoom",
   data() {
     return {
       chats: [],
-      error: ""
+      error: "",
+      content: "",
+      socket: io("http://localhost:4000"),
+      isUserConnected: JSON.parse(localStorage.getItem("user"))
     };
   },
   created() {
@@ -35,8 +40,29 @@ export default {
       .catch(err => {
         this.error = err.message;
       });
+
+    this.socket.on("new-message", data => {
+      this.chats.push(data);
+    });
   },
-  methods: {}
+  methods: {
+    sendMessage(evt) {
+      evt.preventDefault();
+      const chatRoom = {
+        receiver: this.$route.params.receiver_id,
+        sender: this.isUserConnected._id,
+        emitBy: this.isUserConnected.firstname,
+        content: this.content
+      };
+      ChatService.updateChat(this.$route.params.id, chatRoom)
+        .then(response => {
+          this.socket.emit("new-message", response.data.messages);
+        })
+        .catch(err => {
+          this.error = err.message;
+        });
+    }
+  }
 };
 </script>
 

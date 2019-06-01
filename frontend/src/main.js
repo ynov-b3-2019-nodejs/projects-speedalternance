@@ -19,7 +19,7 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     {
-      path: '/ChatRoom/:id',
+      path: '/ChatRoom/:id/:receiver_id',
       name: 'ChatRoom',
       component: ChatRoom
     },
