@@ -8,6 +8,7 @@ import App from './App';
 import SignUp from './components/SignUp';
 import HomePage from './components/Homepage';
 import ChatRoom from './components/ChatRoom';
+import ChatList from './components/ChatList';
 
 Vue.config.productionTip = false;
 Vue.config.$http = Axios;
@@ -25,6 +26,10 @@ const router = new VueRouter({
     {
       path: '/signup',
       component: SignUp
+    },
+    {
+      path: 'ChatList',
+      component: ChatList
     },
     {
       path: '/',

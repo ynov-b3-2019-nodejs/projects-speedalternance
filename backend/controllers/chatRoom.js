@@ -19,8 +19,34 @@ exports.getCurrentChat = async (req, res, next) => {
   return res.status(200).json(currentChat);
 };
 
+exports.updateChat = (req, res, next) => {
+  const chat = {
+    sender_id: req.body.sender,
+    receiver_id: req.body.receiver,
+    emit_by: req.body.emitBy,
+    content: req.body.content
+  };
+  Chat.findByIdAndUpdate(
+    req.params.id,
+    { $push: { messages: chat } },
+    (err, response) => {
+      if (err) {
+        return res.status(404).json({
+          error: err
+        });
+      }
+      console.log(response.n);
+      return res.status(200).json({
+        response,
+        message: 'update successfully'
+      });
+    }
+  );
+};
+
 exports.createChat = (req, res, next) => {
-  const chat = new Chat({
+  const chat = new Chat();
+  chat.messages.push({
     sender_id: req.body.sender,
     receiver_id: req.body.receiver,
     emit_by: req.body.emitBy,
