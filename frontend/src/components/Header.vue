@@ -60,9 +60,6 @@ export default {
     isLogin: Boolean
   },
   methods: {
-    signup() {
-      this.$emit('spawnSignup')
-    },
     signout(){
       this.$emit('signOut')
     },

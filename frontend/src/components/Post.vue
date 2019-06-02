@@ -1,7 +1,7 @@
 <template>
     <section class="container">
             <h2 class="title">Listes des dernieres annonces</h2>
-            <b-button type="is-success">Ajouter une annonce</b-button>
+            <b-button type="is-success" @click='newPostModal'>Ajouter une annonce</b-button>
             <div>
                 <div v-for="post in posts"
                      v-bind:key="post.id"
@@ -28,12 +28,31 @@
 
 <script>
 import PostService from '../services/Post'
+import NewPost from './NewPost'
 
 export default {
     name: 'Post',
     data(){
         return{
             posts: [],
+        }
+    },
+    methods:{
+        newPostModal(){
+            if(!localStorage.access_token)
+            {
+                this.$toast.open({
+                    duration: 5000,
+                    message: "Vous devez etre connecté pour poster une annonce",
+                    type: "is-danger"
+                });
+                return false
+            }
+            this.$modal.open({
+                parent: this,
+                component: NewPost,
+                hasModalCard: true,
+            })
         }
     },
     created() {

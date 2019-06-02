@@ -2,7 +2,7 @@ import axios from "axios";
 
 axios.defaults.baseURL = 'https://speed-alternance.herokuapp.com/api/user';
 axios.defaults.headers.common['Authorization'] = localStorage.access_token ? localStorage.access_token : null ;
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+//axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 class UserService {
 
@@ -10,13 +10,19 @@ class UserService {
         return axios
             .post('/signup',user)
             .then((res) => {
-                localStorage.setItem("access_token", res.data.access_token);
+                console.log(res)
+                localStorage.setItem("access_token", res.data.token);
+                localStorage.setItem("user",JSON.stringify(res.data.user))
             })
     }
 
     static login(login){
         return axios
-            .post('/login',login);
+            .post('/login',login)
+            .then(res => {
+                localStorage.setItem("access_token", res.data.token)
+                localStorage.setItem("user", JSON.stringify(res.data.user))
+            });
     }
 }
 
