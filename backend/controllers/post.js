@@ -1,7 +1,8 @@
 const Post = require('../models/post');
 
 exports.getAll = (req,res,next) => {
-    Post.find({createdAt: 'desc'},(error, result) => {
+    Post.find()
+    Post.find(null, null ,{sort :{createdAt: -1}},(error, result) => {
         if (error) {
             return res.status(500).json({
               message: error,
