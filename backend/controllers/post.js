@@ -1,7 +1,8 @@
 const Post = require('../models/post');
 
 exports.getAll = (req,res,next) => {
-    Post.find({},(error, result) => {
+    Post.find()
+    Post.find(null, null ,{sort :{createdAt: -1}},(error, result) => {
         if (error) {
             return res.status(500).json({
               message: error,
@@ -26,6 +27,7 @@ exports.new = (req, res, next) =>  {
         isJobOffer: req.body.isJobOffer,
         title: req.body.title,
         content: req.body.content,
+        createdAt: Date.now()
     });
 
     post
