@@ -18,11 +18,9 @@ import * as io from "socket.io-client";
 
 export default {
   name: "ChatList",
-  props: {
-    isUserConnected: {}
-  },
   data() {
     return {
+      isUserConnected: {},
       connectedUser: [],
       disconnectedUser: [],
       user: [],
@@ -49,6 +47,7 @@ export default {
     };
   },
   async created() {
+    this.isUserConnected = JSON.parse(localStorage.getItem("user"));
     UserService.getUser()
       .then(result => {
         this.user = result.data;

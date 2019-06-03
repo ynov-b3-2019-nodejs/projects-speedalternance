@@ -15,6 +15,8 @@ Vue.config.$http = Axios;
 Vue.use(Buefy);
 Vue.use(VueRouter);
 
+let requiresAuth = false;
+
 const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -28,14 +30,32 @@ const router = new VueRouter({
       component: SignUp
     },
     {
-      path: 'ChatList',
-      component: ChatList
+      path: '/ChatList',
+      component: ChatList,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/',
       component: HomePage
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.path === '/ChatList') {
+    if (!localStorage.getItem('access_token')) {
+      next({
+        path: '/'
+      });
+    } else {
+      requiresAuth = true;
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 new Vue({

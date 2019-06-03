@@ -8,8 +8,8 @@
       @signOut="signOutAction"
       @login="loginAction"
     />
-    <router-view></router-view>
-    <ChatList :isUserConnected="userConnected"></ChatList>
+    <router-view/>
+    <!-- <ChatList :isUserConnected="userConnected"></ChatList> -->
   </div>
 </template>
 
