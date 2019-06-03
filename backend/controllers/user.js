@@ -103,7 +103,7 @@ exports.signUp = (req, res, next) => {
           name: result.name,
           picture: result.picture
         };
-        res.status(200).json({
+        res.status(201).json({
           message: 'user created',
           user,
           access_token: token

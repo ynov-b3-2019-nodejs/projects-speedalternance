@@ -3,8 +3,6 @@
     <Header
       :isLogin="logged"
       msg="Welcome to Your Vue.js App"
-      @spawnSignup="spawnSignup = true"
-      @spawnLogin="spawnLogin = true"
       @signOut="signOutAction"
       @login="loginAction"
     />
@@ -41,23 +39,21 @@ export default {
   methods: {
     signUpAction(user) {
       UserService.signUp(user)
-        .then(response => {
-          this.$toast.open({
-            duration: 5000,
-            message: `Content de vous acceuillir parmis nous ${
-              user.firstname
-            } ${user.name}`,
-            type: "is-success"
-          });
-          localStorage.setItem("access_token", response.data.access_token);
-          localStorage.setItem("user", response.data.user);
+        .then(() => {
+          this.$snackbar.open({
+                    message: `Content de vous acceuillir parmis nous!`,
+                    type: 'is-success',
+                    position: 'is-top-right',
+                    actionText: 'ok',
+                    indefinite: true,
+                });
           this.spawnSignup = false;
           this.logged = true;
           this.userConnected = JSON.parse(localStorage.getItem("user"));
           this.$nextTick(() => {
             this.userConnected = JSON.parse(localStorage.getItem("user"));
           });
-          router.push("/");
+          this.$router.push('/')
         })
         .catch(err => {
           this.err = err;
@@ -85,16 +81,13 @@ export default {
     },
     loginAction(login) {
       UserService.login(login)
-        .then(response => {
+        .then(() => {
+          const user = JSON.parse(localStorage.user)
           this.$toast.open({
             duration: 5000,
-            message: `Content de vous revoir parmis nous ${login.firstname} ${
-              login.name
-            }`,
+            message: `Content de vous revoir parmis nous ${user.firstname} ${user.name}`,
             type: "is-success"
           });
-          localStorage.setItem("access_token", response.data.access_token);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
           this.userConnected = JSON.parse(localStorage.getItem("user"));
           this.$nextTick(() => {
             this.userConnected = JSON.parse(localStorage.getItem("user"));
@@ -106,7 +99,7 @@ export default {
           this.err = err;
           this.$toast.open({
             duration: 5000,
-            message: "Une erreur est survenue",
+            message: err,
             type: "is-danger"
           });
         });

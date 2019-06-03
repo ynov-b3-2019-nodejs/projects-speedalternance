@@ -3,7 +3,7 @@
   <div class="navbar-brand">
     <router-link class="navbar-item" to="/">
       <img src="/favicon.png" type="image/png">
-      <h1 style="color: black;"> Speed Alternance</h1>
+      <h1 style="color:rgb(101,59,203)"> Speed Alternance</h1>
     </router-link>
 
     <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -15,13 +15,13 @@
 
   <div id="navbarBasicExample" class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item">
+      <router-link class="navbar-item" to="/">
         Accueil
-      </a>
+      </router-link>
 
-      <a class="navbar-item">
+      <router-link class="navbar-item" to="/annonces">
         Annonces
-      </a>
+      </router-link>
     </div>
 
     <div class="navbar-end">
@@ -60,9 +60,6 @@ export default {
     isLogin: Boolean
   },
   methods: {
-    signup() {
-      this.$emit('spawnSignup')
-    },
     signout(){
       this.$emit('signOut')
     },

@@ -30,6 +30,9 @@
             <b-field label="Password" class="column">
                 <b-input v-model="user.password" type="password" maxlength="30"></b-input>
             </b-field>
+            <b-field label="Password Confirmation" class="column">
+                <b-input v-model="passwordConfirmation" type="password" maxlength="30"></b-input>
+            </b-field>
         </div>
 
         <button class="button is-success" type="submit">S'inscrire</button>
@@ -58,11 +61,21 @@ export default {
                 isStudent: false
             },
             err: '',
+            passwordConfirmation: '',
             isStudientString: false
         }
   },
   methods: {
     submitSignUp(){
+        if (this.passwordConfirmation !== this.user.password)
+        {
+            this.$toast.open({
+                duration: 5000,
+                message: "Veuillez renseigner le meme mot de passe dans les deux champs",
+                type: "is-danger"
+            });
+            return false;
+        }
         this.isStudientString === "true" ? this.user.isStudent = true : this.user.isStudent = false
         EventBus.$emit('signup',this.user)
     }

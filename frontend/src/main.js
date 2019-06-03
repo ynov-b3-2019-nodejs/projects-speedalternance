@@ -27,7 +27,8 @@ const router = new VueRouter({
     },
     {
       path: '/signup',
-      component: SignUp
+      component: SignUp,
+      name: 'signup'
     },
     {
       path: '/ChatList',
@@ -38,7 +39,13 @@ const router = new VueRouter({
     },
     {
       path: '/',
-      component: HomePage
+      component: HomePage,
+      name: 'root'
+    },
+    {
+      path: '/annonces',
+      component: Post,
+      name: 'post'
     }
   ]
 });
