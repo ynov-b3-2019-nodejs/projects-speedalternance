@@ -13,7 +13,7 @@
                         </b-input>
                     </b-field>
 
-                    <b-field label="Cotenue de l'annonce">
+                    <b-field label="Contenue de l'annonce">
                         <b-input
                             type="textarea"
                             v-model="post.content"
@@ -52,13 +52,15 @@ export default {
             this.post.isJobOffer = !user.isStudent
             PostService.publish(this.post)
                 .then(res => {
-                    console.log(res.status)
-                    this.$toast.open({
-                        duration: 5000,
-                        message: "Annonces ajouté !",
-                        type: "is-success"
-                    });
-                    this.$router.push('/annonces')
+                    if(res.status == 201){
+                        this.$parent.close()
+                        this.$emit('newPost')
+                        this.$toast.open({
+                            duration: 5000,
+                            message: "Annonces ajouté !",
+                            type: "is-success"
+                        });
+                    }
                 })
                 .catch(err => {
                     this.$toast.open({

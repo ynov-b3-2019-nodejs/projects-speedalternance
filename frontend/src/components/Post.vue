@@ -18,7 +18,9 @@
                             <p class="subtitle is-6">{{ post.content }}</p>
                         </div>
                         <div class="column is-vcentered emailIcon">
+                             <b-button size="is-large" class="customButton" @click="sendMessage(post.publisherId)">
                                 <b-icon class="is-vcentered" icon="email" size="is-large" type="is-success"></b-icon>
+                            </b-button>
                         </div>
                 </div>
             </div>
@@ -52,7 +54,36 @@ export default {
                 parent: this,
                 component: NewPost,
                 hasModalCard: true,
+                events: {'newPost': () => {
+                    this.reloadPost()
+                }}
             })
+        },
+        sendMessage(publisherId)
+        {
+            if(!localStorage.access_token)
+            {
+                this.$toast.open({
+                    duration: 5000,
+                    message: "Vous devez etre connecté pour répondre à une annonce",
+                    type: "is-danger"
+                });
+                return false
+            }
+            this.$toast.open({
+                duration: 5000,
+                message: "Lunch new chatroom from "+ JSON.parse(localStorage.user)._id +" with " + publisherId,
+                type: "is-success"
+            });
+        },
+        reloadPost(){
+            console.log('pass here')
+            PostService.getAll().then(res => this.posts = res.data.posts)
+                .catch(err => this.$toast.open({
+                    duration: 5000,
+                    message: `une erreur est survenue : ${err}`,
+                    type: "is-danger"
+            }));
         }
     },
     created() {
@@ -102,5 +133,8 @@ export default {
 }
 .emailIcon{
     cursor: pointer;
+}
+.customButton{
+    border: none;
 }
 </style>
