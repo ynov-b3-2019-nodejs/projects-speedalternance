@@ -9,6 +9,7 @@ import SignUp from './components/SignUp';
 import HomePage from './components/Homepage';
 import ChatRoom from './components/ChatRoom';
 import ChatList from './components/ChatList';
+import Post from './components/Post';
 
 Vue.config.productionTip = false;
 Vue.config.$http = Axios;
