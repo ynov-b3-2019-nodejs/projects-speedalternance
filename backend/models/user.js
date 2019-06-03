@@ -9,7 +9,8 @@ const userSchema = mongoose.Schema({
   picture: String,
   competencies: [String],
   isStudent: { type: Boolean, required: true },
-  isBoss: { type: Boolean, required: true }
+  isBoss: { type: Boolean, required: true },
+  isConnected: Boolean
 });
 
 module.exports = mongoose.model('User', userSchema);

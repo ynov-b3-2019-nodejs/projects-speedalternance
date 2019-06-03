@@ -12,6 +12,7 @@
     "axios-progress-bar": "^1.2.0",
     "buefy": "^0.7.6",
     "core-js": "^2.6.5",
+    "socket.io-client": "^2.2.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.6"
   },

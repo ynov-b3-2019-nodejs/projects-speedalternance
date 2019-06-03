@@ -6,29 +6,35 @@
       @signOut="signOutAction"
       @login="loginAction"
     />
-    <router-view></router-view>
+    <router-view/>
+    <!-- <ChatList :isUserConnected="userConnected"></ChatList> -->
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
+import ChatList from "./components/ChatList.vue";
 import UserService from "./services/User";
-import EventBus from './EventBus'
+import ChatRoom from "./components/ChatRoom.vue";
+import EventBus from "./EventBus";
 
 export default {
   name: "app",
   components: {
-    Header
+    Header,
+    ChatList,
+    ChatRoom
   },
   data() {
     return {
+      userConnected: JSON.parse(localStorage.getItem("user")),
       spawnSignup: false,
       spawnLogin: false,
       logged: localStorage.access_token ? true : false
     };
   },
   mounted() {
-    EventBus.$on('signup', this.signUpAction);
+    EventBus.$on("signup", this.signUpAction);
   },
   methods: {
     signUpAction(user) {
@@ -43,6 +49,10 @@ export default {
                 });
           this.spawnSignup = false;
           this.logged = true;
+          this.userConnected = JSON.parse(localStorage.getItem("user"));
+          this.$nextTick(() => {
+            this.userConnected = JSON.parse(localStorage.getItem("user"));
+          });
           this.$router.push('/')
         })
         .catch(err => {
@@ -58,11 +68,15 @@ export default {
     signOutAction() {
       localStorage.removeItem("access_token");
       localStorage.removeItem("user");
+      this.userConnected = {};
+      this.$nextTick(() => {
+        this.userConnected = {};
+      });
       this.logged = false;
       this.$toast.open({
         duration: 5000,
         message: `A bientot !`,
-        type: "is-success"
+        type: "is-danger"
       });
     },
     loginAction(login) {
@@ -73,6 +87,10 @@ export default {
             duration: 5000,
             message: `Content de vous revoir parmis nous ${user.firstname} ${user.name}`,
             type: "is-success"
+          });
+          this.userConnected = JSON.parse(localStorage.getItem("user"));
+          this.$nextTick(() => {
+            this.userConnected = JSON.parse(localStorage.getItem("user"));
           });
           this.spawnLogin = false;
           this.logged = true;
