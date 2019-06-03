@@ -13,17 +13,13 @@
 
 <script>
 import Header from "./components/Header.vue";
-import ChatList from "./components/ChatList.vue";
 import UserService from "./services/User";
-import ChatRoom from "./components/ChatRoom.vue";
 import EventBus from "./EventBus";
 
 export default {
   name: "app",
   components: {
     Header,
-    ChatList,
-    ChatRoom
   },
   data() {
     return {

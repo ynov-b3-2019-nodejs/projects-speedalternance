@@ -8,10 +8,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 class UserService {
   static signUp(user) {
-    return axios.post('/user/signup', user);
-  }
-
-  static signUp(user) {
     return axios.post('/user/signup', user).then(res => {
       localStorage.setItem('access_token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
