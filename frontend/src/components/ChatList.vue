@@ -63,23 +63,53 @@ export default {
       });
   },
   methods: {
-    openChatRoom(receiver_id) {
+    async openChatRoom(receiver_id) {
+      const allChat = await ChatService.getAllChat();
+      const isUserJoin = allChat.data.some(elements => {
+        return elements.messages.find(element => {
+          return (
+            element.sender_id === this.isUserConnected._id &&
+            element.receiver_id === receiver_id
+          );
+        });
+      });
       const chatRoom = {
         receiver: receiver_id,
         sender: this.isUserConnected._id,
         emitBy: this.isUserConnected.firstname,
         content: `${this.isUserConnected.firstname} est en train d'ecrire ... `
       };
-      ChatService.createChat(chatRoom)
-        .then(response => {
-          this.$router.push({
-            name: "ChatRoom",
-            params: { id: response.data.chat._id, receiver_id }
+      if (!isUserJoin) {
+        ChatService.createChat(chatRoom)
+          .then(response => {
+            this.$router.push({
+              name: "ChatRoom",
+              params: { id: response.data.chat._id, receiver_id }
+            });
+          })
+          .catch(err => {
+            this.err = err.message;
           });
-        })
-        .catch(err => {
-          this.err = err.message;
+      } else {
+        const chat = allChat.data.filter(elements => {
+          return elements.messages.find(message => {
+            return (
+              message.sender_id === this.isUserConnected._id &&
+              message.receiver_id === receiver_id
+            );
+          });
         });
+        ChatService.updateChat(chat[0]._id, chatRoom)
+          .then(response => {
+            this.$router.push({
+              name: "ChatRoom",
+              params: { id: chat[0]._id, receiver_id }
+            });
+          })
+          .catch(err => {
+            this.err = err.message;
+          });
+      }
     }
   }
 };

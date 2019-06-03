@@ -7,6 +7,9 @@ axios.defaults.headers.common['Authorization'] = localStorage.access_token
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 class ChatService {
+  static getAllChat() {
+    return axios.get('/chatRoom/');
+  }
   static createChat(chat) {
     return axios.post('/chatRoom/', chat);
   }
