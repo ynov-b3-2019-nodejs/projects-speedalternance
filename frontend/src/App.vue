@@ -76,13 +76,12 @@ export default {
           });
           this.spawnLogin = false;
           this.logged = true;
-          this.$router.push('/')
         })
         .catch(err => {
           this.err = err;
           this.$toast.open({
             duration: 5000,
-            message: "Une erreur est survenue",
+            message: err,
             type: "is-danger"
           });
         });

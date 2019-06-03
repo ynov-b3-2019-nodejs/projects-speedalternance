@@ -39,13 +39,34 @@ export default {
         return{
             post: {
                 title: '',
-                content: ''
+                content: '',
+                publisherId: '',
+                isJobOffer : false
             }
         }
     },
-    meyhods: {
+    methods: {
         submitPost(){
+            const user = JSON.parse(localStorage.user)
+            this.post.publisherId = user._id
+            this.post.isJobOffer = !user.isStudent
             PostService.publish(this.post)
+                .then(res => {
+                    console.log(res.status)
+                    this.$toast.open({
+                        duration: 5000,
+                        message: "Annonces ajouté !",
+                        type: "is-success"
+                    });
+                    this.$router.push('/annonces')
+                })
+                .catch(err => {
+                    this.$toast.open({
+                        duration: 5000,
+                        message: err,
+                        type: "is-danger"
+                    });
+                })
         }
     }
 }
