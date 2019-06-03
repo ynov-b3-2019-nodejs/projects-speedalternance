@@ -3,8 +3,6 @@
     <Header
       :isLogin="logged"
       msg="Welcome to Your Vue.js App"
-      @spawnSignup="spawnSignup = true"
-      @spawnLogin="spawnLogin = true"
       @signOut="signOutAction"
       @login="loginAction"
     />
@@ -59,31 +57,31 @@ export default {
     },
     signOutAction() {
       localStorage.removeItem("access_token");
+      localStorage.removeItem("user");
       this.logged = false;
       this.$toast.open({
         duration: 5000,
         message: `A bientot !`,
-        type: "is-danger"
+        type: "is-success"
       });
     },
     loginAction(login) {
       UserService.login(login)
-        .then(res => {
-          localStorage.setItem("access_token", res.data.access_token);
+        .then(() => {
+          const user = JSON.parse(localStorage.user)
           this.$toast.open({
             duration: 5000,
-            message: `Content de vous revoir parmis nous ${res.data.user.firstname} ${res.data.user.name}`,
+            message: `Content de vous revoir parmis nous ${user.firstname} ${user.name}`,
             type: "is-success"
           });
           this.spawnLogin = false;
           this.logged = true;
-          this.$router.push('/')
         })
         .catch(err => {
           this.err = err;
           this.$toast.open({
             duration: 5000,
-            message: "Une erreur est survenue",
+            message: err,
             type: "is-danger"
           });
         });

@@ -19,9 +19,9 @@
         Accueil
       </router-link>
 
-      <a class="navbar-item">
+      <router-link class="navbar-item" to="/annonces">
         Annonces
-      </a>
+      </router-link>
     </div>
 
     <div class="navbar-end">
@@ -60,9 +60,6 @@ export default {
     isLogin: Boolean
   },
   methods: {
-    signup() {
-      this.$emit('spawnSignup')
-    },
     signout(){
       this.$emit('signOut')
     },
