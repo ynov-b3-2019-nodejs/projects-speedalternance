@@ -1,16 +1,22 @@
 import axios from 'axios';
 
+axios.defaults.baseURL = 'https://speed-alternance.herokuapp.com/api';
+axios.defaults.headers.common['Authorization'] = localStorage.access_token
+  ? localStorage.access_token
+  : null;
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 class ChatService {
   static createChat(chat) {
-    return axios.post('http://localhost:3000/api/chatRoom/', chat);
+    return axios.post('/chatRoom/', chat);
   }
 
   static getCurrentChat(id) {
-    return axios.get(`http://localhost:3000/api/chatRoom/${id}`);
+    return axios.get(`/chatRoom/${id}`);
   }
 
   static updateChat(id, chat) {
-    return axios.put(`http://localhost:3000/api/chatRoom/${id}`, chat);
+    return axios.put(`/chatRoom/${id}`, chat);
   }
 }
 
