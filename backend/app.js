@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/post')
+const postRoutes = require('./routes/post');
 const chatRoutes = require('./routes/chatRoom');
 const mongoose = require('mongoose');
 
@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-Width, Content-Type,Accept,Authorization'
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use('/api/user', userRoutes);
-app.use('/api/post', postRoutes)
+app.use('/api/post', postRoutes);
 app.use('/api/chatRoom', chatRoutes);
 app.use('/', (req, res) => {
   return res.status(200).json({
