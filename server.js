@@ -55,7 +55,7 @@ app.set('port', port);
 app.use(staticFileMiddleware)
 app.use(history({
   verbose: true
-  }));
+}));
 app.use(staticFileMiddleware)
 const server = http.createServer(app);
 server.on('error', onError);
