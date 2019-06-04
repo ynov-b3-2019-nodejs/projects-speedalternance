@@ -24,7 +24,7 @@ export default {
       connectedUser: [],
       disconnectedUser: [],
       user: [],
-      socket: io("http://localhost:4000"),
+      socket: io("https://speed-alternance.herokuapp.com"),
       err: "",
       columns: [
         {
@@ -99,6 +99,7 @@ export default {
             );
           });
         });
+        chatRoom.content = "";
         ChatService.updateChat(chat[0]._id, chatRoom)
           .then(response => {
             this.$router.push({
