@@ -2,9 +2,9 @@ const Chat = require('../models/chatRoom');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server, { origins: '*:*' });
 
-server.listen(4000);
+server.listen(3000);
 
 io.on('connection', () => {
   console.log('user connected');
