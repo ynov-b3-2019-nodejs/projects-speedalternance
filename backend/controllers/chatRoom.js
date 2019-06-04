@@ -4,7 +4,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
-server.listen(process.env.PORT || 4000);
+server.listen(4000);
 
 io.on('connection', () => {
   console.log('user connected');
