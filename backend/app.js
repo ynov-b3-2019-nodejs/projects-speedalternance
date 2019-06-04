@@ -36,10 +36,4 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes);
 app.use('/api/post', postRoutes)
 app.use('/api/chatRoom', chatRoutes);
-app.use('/', (req, res) => {
-  return res.status(200).json({
-    testing: 'good'
-  });
-});
-
 module.exports = app;
