@@ -3,6 +3,7 @@ const debug = require('debug')('node-angular');
 const http = require('http');
 const path = require('path');
 const express = require('express');
+var history = require('connect-history-api-fallback');
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -46,9 +47,16 @@ const onListening = () => {
 };
 
 const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
-app.use('/', express.static(__dirname + '/frontend/dist'));
 
+const staticFileMiddleware = express.static(__dirname + '/frontend/dist')
+
+
+app.set('port', port);
+app.use(staticFileMiddleware)
+app.use(history({
+  verbose: true
+  }));
+app.use(staticFileMiddleware)
 const server = http.createServer(app);
 server.on('error', onError);
 server.on('listening', onListening);
