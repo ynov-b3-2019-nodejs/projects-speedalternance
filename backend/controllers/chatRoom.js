@@ -1,11 +1,17 @@
 const Chat = require('../models/chatRoom');
 const express = require('express');
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-server.listen(process.env.PORT || 4000);
-io.on('connection', () => {
+const PORT = process.env.PORT || 4000;
+const socketIo = require('socket.io');
+const server = express().listen(PORT, () =>
+  console.log(`Listening on ${PORT}`)
+);
+
+const io = socketIo(server);
+
+io.on('connection', socket => {
   console.log('user connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
 exports.getChat = async (req, res, next) => {
