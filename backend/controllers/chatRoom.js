@@ -1,7 +1,7 @@
 const Chat = require('../models/chatRoom');
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT;
+const PORT = 4000;
 const socketIo = require('socket.io');
 const server = express().listen(PORT, () =>
   console.log(`Listening on ${PORT}`)
