@@ -1,18 +1,7 @@
 const Chat = require('../models/chatRoom');
 const express = require('express');
-const app = express();
-const PORT = 4000;
-const socketIo = require('socket.io');
-const server = express().listen(PORT, () =>
-  console.log(`Listening on ${PORT}`)
-);
-
-const io = socketIo(server);
-
-io.on('connection', socket => {
-  console.log('user connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
-});
+const app = require('../app');
+const io = require('../../server').io;
 
 exports.getChat = async (req, res, next) => {
   const allChat = await Chat.find({});

@@ -3,6 +3,7 @@ const debug = require('debug')('node-angular');
 const http = require('http');
 const path = require('path');
 const express = require('express');
+const socketIo = require('socket.io');
 //var history = require('connect-history-api-fallback');
 
 const normalizePort = val => {
@@ -60,8 +61,13 @@ app.get(/.*/, (req, res) => {
 // }));
 // app.use(staticFileMiddleware)
 const server = http.createServer(app);
+const io = socketIo.listen(server);
+io.on('connection', socket => {
+  console.log('user connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
 server.on('error', onError);
 server.on('listening', onListening);
 server.listen(port);
-
-module.exports = server;
+exports.server = server;
+exports.io = io;

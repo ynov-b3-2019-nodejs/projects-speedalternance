@@ -28,7 +28,7 @@ export default {
       chats: [],
       error: "",
       content: "",
-      socket: io(":4000"),
+      socket: io("http://localhost:3000"),
       isUserConnected: JSON.parse(localStorage.getItem("user"))
     };
   },
