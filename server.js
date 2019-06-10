@@ -3,7 +3,7 @@ const debug = require('debug')('node-angular');
 const http = require('http');
 const path = require('path');
 const express = require('express');
-const socketIo = require('socket.io');
+const connection = require('./connection');
 //var history = require('connect-history-api-fallback');
 
 const normalizePort = val => {
@@ -51,23 +51,18 @@ const port = normalizePort(process.env.PORT || '3000');
 
 const staticFileMiddleware = express.static(__dirname + '/frontend/dist');
 
-app.set('port', port);
+// app.set('port', port);
 app.use(staticFileMiddleware);
 app.get(/.*/, (req, res) => {
   res.sendFile(__dirname + '/frontend/dist/index.html');
 });
-// app.use(history({
-//   verbose: true
-// }));
-// app.use(staticFileMiddleware)
+// app.use(
+//   history({
+//     verbose: true
+//   })
+// );
 const server = http.createServer(app);
-const io = socketIo.listen(server);
-io.on('connection', socket => {
-  console.log('user connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
-});
+connection.connect(server);
 server.on('error', onError);
 server.on('listening', onListening);
 server.listen(port);
-exports.server = server;
-exports.io = io;
