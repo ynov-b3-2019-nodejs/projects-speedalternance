@@ -1,7 +1,8 @@
 let socketValue = null;
+let io = null;
 
 exports.connect = server => {
-  const io = require('socket.io')(server);
+  io = require('socket.io')(server);
   io.on('connection', socket => {
     console.log('user connected');
     socketValue = socket;
@@ -12,5 +13,5 @@ exports.connect = server => {
 };
 
 exports.sendEvent = (event, data) => {
-  socketValue.emit(event, data);
+  io.emit(event, data);
 };
