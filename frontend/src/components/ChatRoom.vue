@@ -28,7 +28,7 @@ export default {
       chats: [],
       error: "",
       content: "",
-      socket: io(window.location.hostname),
+      socket: io("http://localhost:4000"),
       isUserConnected: JSON.parse(localStorage.getItem("user"))
     };
   },
@@ -56,7 +56,7 @@ export default {
       };
       ChatService.updateChat(this.$route.params.id, chatRoom)
         .then(response => {
-          this.socket.emit("new-message", chatRoom);
+          this.socket.emit("new-message", response.data.messages);
         })
         .catch(err => {
           this.error = err.message;
