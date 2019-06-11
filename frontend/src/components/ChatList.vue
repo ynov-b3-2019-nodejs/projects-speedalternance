@@ -24,7 +24,7 @@ export default {
       connectedUser: [],
       disconnectedUser: [],
       user: [],
-      socket: io("http://localhost:4000"),
+      socket: io(window.location.hostname),
       err: "",
       columns: [
         {

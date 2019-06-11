@@ -1,14 +1,7 @@
 const Chat = require('../models/chatRoom');
 const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
-
-server.listen(4000);
-
-io.on('connection', () => {
-  console.log('user connected');
-});
+const app = require('../app');
+const connection = require('../../connection');
 
 exports.getChat = async (req, res, next) => {
   const allChat = await Chat.find({});
@@ -45,7 +38,7 @@ exports.updateChat = (req, res, next) => {
           error: err
         });
       }
-      io.emit('new-message', chat);
+      connection.sendEvent('new-message', chat);
       return res.status(200).json({
         response,
         message: 'update successfully'
@@ -65,15 +58,16 @@ exports.createChat = (req, res, next) => {
   chat
     .save()
     .then(result => {
-      io.emit('new-message', result);
+      connection.sendEvent('new-message', result);
       res.status(200).json({
         chat: result
       });
     })
     .catch(err => {
+      console.log(err);
       res.status(500).json({
         message: 'failed',
-        err
+        error: err
       });
     });
 };
