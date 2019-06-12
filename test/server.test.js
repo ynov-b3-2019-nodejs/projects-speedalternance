@@ -13,12 +13,13 @@ describe('testing /api/user', () => {
   it('should respond thats good', async done => {
     const res = await request(app).get('/api/user');
     expect(res.status).toBe(200);
+
     done();
   });
 });
 
 describe('testing /api/post', () => {
-  it('should respond thats good', async done => {
+  it('should respond thats good', async (done) => {
     const res = await request(app).get('/api/post');
     expect(res.status).toBe(200);
     done();
