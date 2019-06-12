@@ -1,6 +1,10 @@
 const app = require('./backend/app');
 const debug = require('debug')('node-angular');
 const http = require('http');
+const path = require('path');
+const express = require('express');
+const connection = require('./connection');
+//var history = require('connect-history-api-fallback');
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -44,10 +48,21 @@ const onListening = () => {
 };
 
 const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+
+const staticFileMiddleware = express.static(__dirname + '/frontend/dist');
+
+// app.set('port', port);
+app.use(staticFileMiddleware);
+app.get(/.*/, (req, res) => {
+  res.sendFile(__dirname + '/frontend/dist/index.html');
+});
+// app.use(
+//   history({
+//     verbose: true
+//   })
+// );
 const server = http.createServer(app);
+connection.connect(server);
 server.on('error', onError);
 server.on('listening', onListening);
 server.listen(port);
-
-module.exports = server;
