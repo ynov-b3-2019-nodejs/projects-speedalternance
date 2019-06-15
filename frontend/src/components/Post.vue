@@ -56,12 +56,7 @@ export default {
       this.$modal.open({
         parent: this,
         component: NewPost,
-        hasModalCard: true,
-        events: {
-          newPost: () => {
-            this.reloadPost();
-          }
-        }
+        hasModalCard: true
       });
     },
     async sendMessage(publisherId) {
@@ -82,8 +77,7 @@ export default {
       });
       const chatRoom = {
         users_id: [publisherId, this.isUserConnected._id],
-        emitBy: JSON.parse(localStorage.user).firstname,
-        content: ""
+        messages: []
       };
       if (!isUserJoin) {
         ChatService.createChat(chatRoom)
@@ -103,7 +97,7 @@ export default {
             elements.users_id.includes(publisherId)
           );
         });
-        ChatService.updateChat(currentChat[0]._id, chatRoom)
+        ChatService.getCurrentChat(currentChat[0]._id)
           .then(response => {
             this.$router.push({
               name: "ChatRoom",
@@ -129,6 +123,9 @@ export default {
   },
   created() {
     this.isUserConnected = JSON.parse(localStorage.getItem("user"));
+    this.socket.on("new-post", data => {
+      this.posts.unshift(data);
+    });
     PostService.getAll()
       .then(res => (this.posts = res.data.posts))
       .catch(err =>

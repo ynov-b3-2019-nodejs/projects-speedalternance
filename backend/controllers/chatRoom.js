@@ -48,10 +48,7 @@ exports.updateChat = (req, res, next) => {
 exports.createChat = (req, res, next) => {
   const chat = new Chat();
   chat.users_id = req.body.users_id;
-  chat.messages.push({
-    emit_by: req.body.emitBy,
-    content: req.body.content
-  });
+  chat.messages = req.body.messages;
   chat
     .save()
     .then(result => {
