@@ -24,8 +24,6 @@ exports.getCurrentChat = async (req, res, next) => {
 
 exports.updateChat = (req, res, next) => {
   const chat = {
-    sender_id: req.body.sender,
-    receiver_id: req.body.receiver,
     emit_by: req.body.emitBy,
     content: req.body.content
   };
@@ -49,12 +47,8 @@ exports.updateChat = (req, res, next) => {
 
 exports.createChat = (req, res, next) => {
   const chat = new Chat();
-  chat.messages.push({
-    sender_id: req.body.sender,
-    receiver_id: req.body.receiver,
-    emit_by: req.body.emitBy,
-    content: req.body.content
-  });
+  chat.users_id = req.body.users_id;
+  chat.messages = req.body.messages;
   chat
     .save()
     .then(result => {

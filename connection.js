@@ -15,3 +15,7 @@ exports.connect = server => {
 exports.sendEvent = (event, data) => {
   io.emit(event, data);
 };
+
+exports.sendEventPost = (event, data) => {
+  io.emit(event, data);
+};

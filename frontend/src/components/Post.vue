@@ -31,12 +31,16 @@
 <script>
 import PostService from "../services/Post";
 import NewPost from "./NewPost";
+import ChatService from "../services/Chat";
+import * as io from "socket.io-client";
 
 export default {
   name: "Post",
   data() {
     return {
-      posts: []
+      isUserConnected: {},
+      posts: [],
+      socket: io(window.location.hostname)
     };
   },
   methods: {
@@ -52,15 +56,10 @@ export default {
       this.$modal.open({
         parent: this,
         component: NewPost,
-        hasModalCard: true,
-        events: {
-          newPost: () => {
-            this.reloadPost();
-          }
-        }
+        hasModalCard: true
       });
     },
-    sendMessage(publisherId) {
+    async sendMessage(publisherId) {
       if (!localStorage.access_token) {
         this.$toast.open({
           duration: 5000,
@@ -69,15 +68,46 @@ export default {
         });
         return false;
       }
-      this.$toast.open({
-        duration: 5000,
-        message:
-          "Lunch new chatroom from " +
-          JSON.parse(localStorage.user)._id +
-          " with " +
-          publisherId,
-        type: "is-success"
+      const allChat = await ChatService.getAllChat();
+      const isUserJoin = allChat.data.some(elements => {
+        return (
+          elements.users_id.includes(this.isUserConnected._id) &&
+          elements.users_id.includes(publisherId)
+        );
       });
+      const chatRoom = {
+        users_id: [publisherId, this.isUserConnected._id],
+        messages: []
+      };
+      if (!isUserJoin) {
+        ChatService.createChat(chatRoom)
+          .then(response => {
+            this.$router.push({
+              name: "ChatRoom",
+              params: { id: response.data.chat._id }
+            });
+          })
+          .catch(err => {
+            this.err = err.message;
+          });
+      } else {
+        const currentChat = allChat.data.filter(elements => {
+          return (
+            elements.users_id.includes(this.isUserConnected._id) &&
+            elements.users_id.includes(publisherId)
+          );
+        });
+        ChatService.getCurrentChat(currentChat[0]._id)
+          .then(response => {
+            this.$router.push({
+              name: "ChatRoom",
+              params: { id: currentChat[0]._id }
+            });
+          })
+          .catch(err => {
+            this.err = err.message;
+          });
+      }
     },
     reloadPost() {
       PostService.getAll()
@@ -92,6 +122,10 @@ export default {
     }
   },
   created() {
+    this.isUserConnected = JSON.parse(localStorage.getItem("user"));
+    this.socket.on("new-post", data => {
+      this.posts.unshift(data);
+    });
     PostService.getAll()
       .then(res => (this.posts = res.data.posts))
       .catch(err =>
