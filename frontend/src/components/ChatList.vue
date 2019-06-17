@@ -1,10 +1,13 @@
 <template>
-  <div id='chatList' >
-    <h4 class="title is-4" style="text-align: center;"> Mes Messages </h4>
-    <div v-for='chat in myChatList' v-bind:key="chat.id" v-bind:chat="chat">
-      <div class='chatPreview' @click="openChatRoom(chat._id)">
+  <div id="chatList">
+    <h4 class="title is-4" style="text-align: center;">Mes Messages</h4>
+    <div v-for="chat in myChatList" v-bind:key="chat.id" v-bind:chat="chat">
+      <div class="chatPreview" @click="openChatRoom(chat._id)">
         <p class="title is-6">{{ Capitalize(chat._id) }}</p>
-        <p class="subtitle is-6" v-if='chat.messages.length > 0'>{{ chat.messages[chat.messages.length - 1].content }}</p>
+        <p
+          class="subtitle is-6"
+          v-if="chat.messages.length > 0"
+        >{{ chat.messages[chat.messages.length - 1].content }}</p>
       </div>
     </div>
   </div>
@@ -12,9 +15,7 @@
 
 <script>
 import ChatService from "../services/Chat";
-import UserService from "../services/User";
 import * as io from "socket.io-client";
-import axios from 'axios';
 
 export default {
   name: "ChatList",
@@ -22,28 +23,26 @@ export default {
     return {
       isUserConnected: {},
       myChatList: [],
-      socket: io(window.location.hostname + ":3000"),
+      socket: io(window.location.hostname),
       err: ""
     };
   },
   created() {
-    ChatService.getAllUserChats().then( res => {
-      this.myChatList = res.data
-    })
+    ChatService.getAllUserChats().then(res => {
+      this.myChatList = res.data;
+    });
   },
   watch: {
-    myChatList: function (val, oldVal) {
-      console.log(this.myChatList)
-      this.openChatRoom(this.myChatList[0]._id)
+    myChatList: function(val, oldVal) {
+      this.openChatRoom(this.myChatList[0]._id);
     }
   },
   methods: {
     openChatRoom(chatRoomId) {
-      this.$emit('openChat',chatRoomId)
+      this.$emit("openChat", chatRoomId);
     },
-    Capitalize(string)
-    {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    Capitalize(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     }
   }
 };

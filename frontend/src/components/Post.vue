@@ -81,16 +81,18 @@ export default {
       };
       if (!isUserJoin) {
         ChatService.createChat(chatRoom)
-          .then(response => {
+          .then(() => {
             this.$router.push({
-                  name: "ChatPlace",
-                });
+              name: "ChatPlace"
+            });
             const chat = {
-              emitBy: 'system',
-              content: this.isUserConnected.name + " a repondu a votre annonce " + this.isUserConnected
+              emitBy: "system",
+              content:
+                this.isUserConnected.name +
+                " a repondu a votre annonce " +
+                this.isUserConnected
             };
-            ChatService.updateChat(this.currentChatId, chat)
-              .then()
+            ChatService.updateChat(this.currentChatId, chat).then();
           })
           .catch(err => {
             this.err = err.message;
@@ -103,7 +105,7 @@ export default {
           );
         });
         ChatService.getCurrentChat(currentChat[0]._id)
-          .then(response => {
+          .then(() => {
             this.$router.push({
               name: "ChatPlace",
               params: { id: currentChat[0]._id }

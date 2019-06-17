@@ -2,7 +2,7 @@
   <div>
     <h4 class="title is-4" style="text-align: left;">{{ contactName }}</h4>
     <ul class="msgContainer data-target" v-chat-scroll>
-      <li class="messages"  v-for="msg in chats.messages" v-bind:key="msg.id" v-bind:msg="msg">
+      <li class="messages" v-for="msg in chats.messages" v-bind:key="msg.id" v-bind:msg="msg">
         <div v-if="msg.emit_by == isUserConnected._id" style="text-align: right">
           <p class="msg myMsg">{{ msg.content }}</p>
         </div>
@@ -12,7 +12,7 @@
       </li>
     </ul>
 
-    <form  @submit.prevent="sendMessage" class="chatForm">
+    <form @submit.prevent="sendMessage" class="chatForm">
       <b-field grouped>
         <b-input v-model="content" placeholder="Ecrivez quelque chose ... " expanded></b-input>
         <p class="control">
@@ -26,10 +26,10 @@
 <script>
 import ChatService from "../services/Chat";
 import * as io from "socket.io-client";
-import Vue from 'vue';
-import axios from 'axios'
+import Vue from "vue";
+import axios from "axios";
 
-import VueChatScroll from 'vue-chat-scroll';
+import VueChatScroll from "vue-chat-scroll";
 
 Vue.use(VueChatScroll);
 
@@ -40,8 +40,8 @@ export default {
       chats: [],
       error: "",
       content: "",
-      contactName: '',
-      socket: io("https://speed-alternance.herokuapp.com"),
+      contactName: "",
+      socket: io(window.location.hostname),
       isUserConnected: JSON.parse(localStorage.getItem("user"))
     };
   },
@@ -49,28 +49,31 @@ export default {
     currentChatId: String
   },
   watch: {
-    currentChatId: function() { // watch it
-      this.getChat(this.currentChatId)
+    currentChatId: function() {
+      // watch it
+      this.getChat(this.currentChatId);
     },
     chats: function() {
-      if(this.chats.users_id){
-        switch (this.isUserConnected._id){
-            case this.chats.users_id[0]:
-              this.getUser(this.chats.users_id[1])
-              break
-            case this.chats.users_id[1]:
-              this.getUser(this.chats.users_id[0])
-              break
+      if (this.chats.users_id) {
+        switch (this.isUserConnected._id) {
+          case this.chats.users_id[0]:
+            this.getUser(this.chats.users_id[1]);
+            break;
+          case this.chats.users_id[1]:
+            this.getUser(this.chats.users_id[0]);
+            break;
         }
       }
     }
   },
   created() {
-    this.getChat(this.currentChatId)
+    this.getChat(this.currentChatId);
+    this.socket.on("new-message", data => {
+      this.chats.messages.push(data);
+    });
   },
   methods: {
     sendMessage(evt) {
-      evt.preventDefault();
       const chatRoom = {
         emitBy: this.isUserConnected._id,
         content: this.content
@@ -82,29 +85,31 @@ export default {
         .catch(err => {
           this.error = err.message;
         });
+      this.content = "";
+      evt.preventDefault();
     },
-    getChat(chatId){
+    getChat(chatId) {
       ChatService.getCurrentChat(chatId)
-      .then(response => {
-        this.chats = response.data;
-      })
-      .catch(err => {
-        this.error = err.message;
-      });
-
-      this.socket.on("new-message", data => {
-        this.getChat(this.currentChatId)
-        this.content = ""
-      });
+        .then(response => {
+          this.chats = response.data;
+        })
+        .catch(err => {
+          this.error = err.message;
+        });
     },
     getUser(id) {
-      axios.get('/user/'+id).then(res =>
-        this.contactName = this.Capitalize(res.data.firstname) +" "+ this.Capitalize(res.data.name)
-      )
+      axios
+        .get("/user/" + id)
+        .then(
+          res =>
+            (this.contactName =
+              this.Capitalize(res.data.firstname) +
+              " " +
+              this.Capitalize(res.data.name))
+        );
     },
-    Capitalize(string)
-    {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    Capitalize(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
     }
   }
 };
@@ -118,7 +123,7 @@ export default {
   position: fixed;
   bottom: 0px;
 }
-.msgContainer{
+.msgContainer {
   padding: 1em;
 }
 .msg {
@@ -136,12 +141,12 @@ export default {
   color: white;
 }
 .contactMsg {
-  background-color: rgb(223,222, 229);
+  background-color: rgb(223, 222, 229);
   color: black;
 }
 .data-target {
-    overflow-y: scroll;
-    position: relative;
-    height: 70vh;
+  overflow-y: scroll;
+  position: relative;
+  height: 70vh;
 }
 </style>
