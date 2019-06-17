@@ -39,7 +39,7 @@ export default {
       chats: [],
       error: "",
       content: "",
-      socket: io(window.location.hostname + ":3000"),
+      socket: io(window.location.hostname),
       isUserConnected: JSON.parse(localStorage.getItem("user"))
     };
   },
