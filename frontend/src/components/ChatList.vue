@@ -1,86 +1,66 @@
 <template>
-  <div>
-    <b-table :data="connectedUser" :columns="columns">
-      <template slot-scope="props">
-        <b-table-column label="First name">{{props.row.firstname}}</b-table-column>
-        <b-table-column label="Name">{{props.row.name}}</b-table-column>
-        <b-table-column label="Email">{{props.row.email}}</b-table-column>
-        <b-table-column label="isConnected">{{props.row.isConnected}}</b-table-column>
-        <b-button @click="openChatRoom(props.row._id)" type="is-success">Join</b-button>
-      </template>
-    </b-table>
+  <div id='chatList' >
+    <h4 class="title is-4" style="text-align: center;"> Mes Messages </h4>
+    <div v-for='chat in myChatList' v-bind:key="chat.id" v-bind:chat="chat">
+      <div class='chatPreview' @click="openChatRoom(chat._id)">
+        <p class="title is-6">{{ Capitalize(chat._id) }}</p>
+        <p class="subtitle is-6" v-if='chat.messages.length > 0'>{{ chat.messages[chat.messages.length - 1].content }}</p>
+      </div>
+    </div>
   </div>
 </template>
+
 <script>
 import ChatService from "../services/Chat";
 import UserService from "../services/User";
 import * as io from "socket.io-client";
+import axios from 'axios';
 
 export default {
   name: "ChatList",
   data() {
     return {
       isUserConnected: {},
-      connectedUser: [],
-      disconnectedUser: [],
-      user: [],
-      socket: io(window.location.hostname),
-      err: "",
-      columns: [
-        {
-          field: "firstname",
-          label: "First Name"
-        },
-        {
-          field: "name",
-          label: "Last Name"
-        },
-        {
-          field: "email",
-          label: "Email"
-        },
-        {
-          field: "isConnected",
-          label: "Connected"
-        }
-      ]
+      myChatList: [],
+      socket: io(window.location.hostname + ":3000"),
+      err: ""
     };
   },
-  async created() {
-    this.isUserConnected = JSON.parse(localStorage.getItem("user"));
-    UserService.getUser()
-      .then(result => {
-        this.user = result.data;
-        this.disconnectedUser = this.user.filter(res => {
-          return !res.isConnected;
-        });
-        this.connectedUser = this.user.filter(res => {
-          return res.isConnected;
-        });
-      })
-      .catch(error => {
-        this.err = error.message;
-      });
+  created() {
+    ChatService.getAllUserChats().then( res => {
+      this.myChatList = res.data
+    })
+  },
+  watch: {
+    myChatList: function (val, oldVal) {
+      console.log(this.myChatList)
+      this.openChatRoom(this.myChatList[0]._id)
+    }
   },
   methods: {
-    openChatRoom(receiver_id) {
-      const chatRoom = {
-        receiver: receiver_id,
-        sender: this.isUserConnected._id,
-        emitBy: this.isUserConnected.firstname,
-        content: `${this.isUserConnected.firstname} est en train d'ecrire ... `
-      };
-      ChatService.createChat(chatRoom)
-        .then(response => {
-          this.$router.push({
-            name: "ChatRoom",
-            params: { id: response.data.chat._id, receiver_id }
-          });
-        })
-        .catch(err => {
-          this.err = err.message;
-        });
+    openChatRoom(chatRoomId) {
+      this.$emit('openChat',chatRoomId)
+    },
+    Capitalize(string)
+    {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
   }
 };
 </script>
+
+<style scoped>
+.chatPreview {
+  border-bottom: 1px solid lightgray;
+  min-height: 3em;
+  padding: 1em;
+}
+.chatPreview:hover {
+  background-color: lightgray;
+  font-weight: bold;
+  cursor: pointer;
+}
+#chatList {
+  text-align: left;
+}
+</style>
