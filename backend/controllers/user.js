@@ -13,6 +13,23 @@ exports.getUser = (req, res, next) => {
   });
 };
 
+exports.getCurrentUser = async (req, res, next) => {
+  User.findById(req.params.id)
+    .then(response => {
+      const user = {
+        _id: response._id,
+        firstname: response.firstname,
+        name: response.name
+      };
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      return res.status(500).json({
+        err
+      });
+    });
+};
+
 exports.login = (req, res, next) => {
   let userFetched;
   User.findOne({ email: req.body.email }, (error, result) => {
