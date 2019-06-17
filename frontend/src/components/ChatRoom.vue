@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h4 class="title is-4" style="text-align: left;">{{ currentChatId }}</h4>
+    <h4 class="title is-4" style="text-align: left;">{{ contactName }}</h4>
     <ul class="msgContainer data-target" v-chat-scroll>
-      <li class="messages"  v-for="msg in chats" v-bind:key="msg.id" v-bind:msg="msg">
+      <li class="messages"  v-for="msg in chats.messages" v-bind:key="msg.id" v-bind:msg="msg">
         <div v-if="msg.emit_by == isUserConnected._id" style="text-align: right">
           <p class="msg myMsg">{{ msg.content }}</p>
         </div>
@@ -27,6 +27,7 @@
 import ChatService from "../services/Chat";
 import * as io from "socket.io-client";
 import Vue from 'vue';
+import axios from 'axios'
 
 import VueChatScroll from 'vue-chat-scroll';
 
@@ -39,7 +40,8 @@ export default {
       chats: [],
       error: "",
       content: "",
-      socket: io(window.location.hostname),
+      contactName: '',
+      socket: io("https://speed-alternance.herokuapp.com"),
       isUserConnected: JSON.parse(localStorage.getItem("user"))
     };
   },
@@ -49,6 +51,18 @@ export default {
   watch: {
     currentChatId: function() { // watch it
       this.getChat(this.currentChatId)
+    },
+    chats: function() {
+      if(this.chats.users_id){
+        switch (this.isUserConnected._id){
+            case this.chats.users_id[0]:
+              this.getUser(this.chats.users_id[1])
+              break
+            case this.chats.users_id[1]:
+              this.getUser(this.chats.users_id[0])
+              break
+        }
+      }
     }
   },
   created() {
@@ -63,7 +77,6 @@ export default {
       };
       ChatService.updateChat(this.currentChatId, chatRoom)
         .then(() => {
-
           this.socket.emit("new-message", chatRoom);
         })
         .catch(err => {
@@ -73,15 +86,25 @@ export default {
     getChat(chatId){
       ChatService.getCurrentChat(chatId)
       .then(response => {
-        this.chats = response.data.messages;
+        this.chats = response.data;
       })
       .catch(err => {
         this.error = err.message;
       });
 
       this.socket.on("new-message", data => {
-        this.chats.push(data);
+        this.getChat(this.currentChatId)
+        this.content = ""
       });
+    },
+    getUser(id) {
+      axios.get('/user/'+id).then(res =>
+        this.contactName = this.Capitalize(res.data.firstname) +" "+ this.Capitalize(res.data.name)
+      )
+    },
+    Capitalize(string)
+    {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
   }
 };

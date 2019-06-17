@@ -14,6 +14,7 @@
 import ChatService from "../services/Chat";
 import UserService from "../services/User";
 import * as io from "socket.io-client";
+import axios from 'axios';
 
 export default {
   name: "ChatList",
@@ -43,9 +44,6 @@ export default {
     Capitalize(string)
     {
         return string.charAt(0).toUpperCase() + string.slice(1);
-    },
-    getUserName(id){
-      
     }
   }
 };

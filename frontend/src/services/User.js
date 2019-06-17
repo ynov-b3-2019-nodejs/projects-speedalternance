@@ -20,10 +20,6 @@ class UserService {
       localStorage.setItem('user', JSON.stringify(res.data.user));
     });
   }
-
-  static getUser() {
-    return axios.get('/user/');
-  }
 }
 
 export default UserService;
