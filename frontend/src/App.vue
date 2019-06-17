@@ -5,6 +5,7 @@
       msg="Welcome to Your Vue.js App"
       @signOut="signOutAction"
       @login="loginAction"
+      @msg="openMsg"
     />
     <router-view/>
     <!-- <ChatList :isUserConnected="userConnected"></ChatList> -->
@@ -33,6 +34,9 @@ export default {
     EventBus.$on("signup", this.signUpAction);
   },
   methods: {
+    openMsg(){
+      this.$router.push('/chat')
+    },
     signUpAction(user) {
       UserService.signUp(user)
         .then(() => {

@@ -1,9 +1,10 @@
 <template>
   <div>
-    <ul class="msgContainer" v-chat-scroll="{always: false, smooth: true}">
-      <li v-for="msg in chats" v-bind:key="msg.id" v-bind:msg="msg">
+    <h4 class="title is-4" style="text-align: left;">{{ currentChatId }}</h4>
+    <ul class="msgContainer data-target" v-chat-scroll>
+      <li class="messages"  v-for="msg in chats" v-bind:key="msg.id" v-bind:msg="msg">
         <div v-if="msg.emit_by == isUserConnected._id" style="text-align: right">
-          <p class="msg myMsg">{{ msg.content }} toto</p>
+          <p class="msg myMsg">{{ msg.content }}</p>
         </div>
         <div v-else style="text-align: left">
           <p class="msg contactMsg">{{ msg.content }}</p>
@@ -25,12 +26,17 @@
 <script>
 import ChatService from "../services/Chat";
 import * as io from "socket.io-client";
+import Vue from 'vue';
+
+import VueChatScroll from 'vue-chat-scroll';
+
+Vue.use(VueChatScroll);
 
 export default {
   name: "ChatRoom",
   data() {
     return {
-      chats: [ { "created_date": "2019-06-17T07:20:10.497Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:20:20.014Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:21:01.869Z", "_id": "5ced3eb27d947800176c8c11", "emit_by": "brice", "content": "hey bibi" }, { "created_date": "2019-06-17T07:20:10.497Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:20:20.014Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:21:01.869Z", "_id": "5ced3eb27d947800176c8c11", "emit_by": "brice", "content": "hey bibi" }, { "created_date": "2019-06-17T07:20:10.497Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:20:20.014Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:21:01.869Z", "_id": "5ced3eb27d947800176c8c11", "emit_by": "brice", "content": "hey bibi" }, { "created_date": "2019-06-17T07:20:10.497Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:20:20.014Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:21:01.869Z", "_id": "5ced3eb27d947800176c8c11", "emit_by": "brice", "content": "hey bibi" }, { "created_date": "2019-06-17T07:20:10.497Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:20:20.014Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:21:01.869Z", "_id": "5ced3eb27d947800176c8c11", "emit_by": "brice", "content": "hey bibi" }, { "created_date": "2019-06-17T07:20:10.497Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:20:20.014Z", "_id": "5ced159158587d6c9d7ffaeb", "emit_by": "Cheikh", "content": "yo brice" }, { "created_date": "2019-06-17T07:21:01.869Z", "_id": "5ced3eb27d947800176c8c11", "emit_by": "brice", "content": "hey bibi" } ],
+      chats: [],
       error: "",
       content: "",
       socket: io(window.location.hostname + ":3000"),
@@ -38,20 +44,15 @@ export default {
     };
   },
   props: {
-    currentChatId: "5d073e51a969c6001745243e"
+    currentChatId: String
+  },
+  watch: {
+    currentChatId: function() { // watch it
+      this.getChat(this.currentChatId)
+    }
   },
   created() {
-    ChatService.getCurrentChat("5d073e51a969c6001745243e")
-      .then(response => {
-        this.chats = response.data.messages;
-      })
-      .catch(err => {
-        this.error = err.message;
-      });
-
-    this.socket.on("new-message", data => {
-      this.chats.push(data);
-    });
+    this.getChat(this.currentChatId)
   },
   methods: {
     sendMessage(evt) {
@@ -60,13 +61,27 @@ export default {
         emitBy: this.isUserConnected._id,
         content: this.content
       };
-      ChatService.updateChat("5d073e51a969c6001745243e", chatRoom)
-        .then(response => {
+      ChatService.updateChat(this.currentChatId, chatRoom)
+        .then(() => {
+
           this.socket.emit("new-message", chatRoom);
         })
         .catch(err => {
           this.error = err.message;
         });
+    },
+    getChat(chatId){
+      ChatService.getCurrentChat(chatId)
+      .then(response => {
+        this.chats = response.data.messages;
+      })
+      .catch(err => {
+        this.error = err.message;
+      });
+
+      this.socket.on("new-message", data => {
+        this.chats.push(data);
+      });
     }
   }
 };
@@ -78,7 +93,7 @@ export default {
   padding-right: 1em;
   width: 80%;
   position: fixed;
-  bottom: 10px;
+  bottom: 0px;
 }
 .msgContainer{
   padding: 1em;
@@ -100,5 +115,10 @@ export default {
 .contactMsg {
   background-color: rgb(223,222, 229);
   color: black;
+}
+.data-target {
+    overflow-y: scroll;
+    position: relative;
+    height: 70vh;
 }
 </style>

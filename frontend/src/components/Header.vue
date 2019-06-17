@@ -38,8 +38,8 @@
           <button class="button is-danger" @click="signout">
             <strong>Deconnexion</strong>
           </button>
-          <a class="button is-light">
-            Profile
+          <a class="button is-light" @click="msg">
+            Messages
           </a>
         </div>
       </div>
@@ -62,6 +62,9 @@ export default {
   methods: {
     signout(){
       this.$emit('signOut')
+    },
+    msg(){
+      this.$emit('msg')
     },
     loginModal() {
       this.$modal.open({

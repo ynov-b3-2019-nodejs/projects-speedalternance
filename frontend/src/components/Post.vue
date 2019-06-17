@@ -83,9 +83,14 @@ export default {
         ChatService.createChat(chatRoom)
           .then(response => {
             this.$router.push({
-              name: "ChatRoom",
-              params: { id: response.data.chat._id }
-            });
+                  name: "ChatPlace",
+                });
+            const chat = {
+              emitBy: 'system',
+              content: this.isUserConnected.name + " a repondu a votre annonce " + this.isUserConnected
+            };
+            ChatService.updateChat(this.currentChatId, chat)
+              .then()
           })
           .catch(err => {
             this.err = err.message;
@@ -100,7 +105,7 @@ export default {
         ChatService.getCurrentChat(currentChat[0]._id)
           .then(response => {
             this.$router.push({
-              name: "ChatRoom",
+              name: "ChatPlace",
               params: { id: currentChat[0]._id }
             });
           })

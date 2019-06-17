@@ -1,22 +1,24 @@
+// Public Library
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Axios from 'axios';
 import Buefy from 'buefy';
 import 'buefy/dist/buefy.css';
-import App from './App';
-import VueChatScroll from 'vue-chat-scroll'
+import { loadProgressBar } from 'axios-progress-bar'
 
+//Custom Componnent
+import App from './App';
 import SignUp from './components/SignUp';
 import HomePage from './components/Homepage';
 import ChatPlace from './components/ChatPlace';
 import ChatList from './components/ChatList';
 import Post from './components/Post';
 
+loadProgressBar()
 Vue.config.productionTip = false;
 Vue.config.$http = Axios;
 Vue.use(Buefy);
 Vue.use(VueRouter);
-Vue.use(VueChatScroll)
 let requiresAuth = false;
 
 const router = new VueRouter({
@@ -25,7 +27,10 @@ const router = new VueRouter({
     {
       path: '/chat',
       name: 'ChatPlace',
-      component: ChatPlace
+      component: ChatPlace,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/signup',

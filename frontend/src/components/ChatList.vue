@@ -1,10 +1,10 @@
 <template>
   <div id='chatList' >
     <h4 class="title is-4" style="text-align: center;"> Mes Messages </h4>
-    <div v-for='chat in connectedUser' v-bind:key="chat.id" v-bind:chat="chat">
-      <div class='chatPreview'>
-        <p class="title is-6">{{ Capitalize(chat.firstname) }} {{ Capitalize(chat.name) }}</p>
-        <p class="subtitle is-6" >Le dernier message envoyé par le contact ... </p>
+    <div v-for='chat in myChatList' v-bind:key="chat.id" v-bind:chat="chat">
+      <div class='chatPreview' @click="openChatRoom(chat._id)">
+        <p class="title is-6">{{ Capitalize(chat._id) }}</p>
+        <p class="subtitle is-6" v-if='chat.messages.length > 0'>{{ chat.messages[chat.messages.length - 1].content }}</p>
       </div>
     </div>
   </div>
@@ -20,51 +20,33 @@ export default {
   data() {
     return {
       isUserConnected: {},
-      connectedUser: [],
-      disconnectedUser: [],
-      user: [],
+      myChatList: [],
       socket: io(window.location.hostname + ":3000"),
       err: ""
     };
   },
-  async created() {
-    this.isUserConnected = JSON.parse(localStorage.getItem("user"));
-    UserService.getUser()
-      .then(result => {
-        this.user = result.data;
-        this.disconnectedUser = this.user.filter(res => {
-          return !res.isConnected;
-        });
-        this.connectedUser = this.user.filter(res => {
-          return res.isConnected;
-        });
-      })
-      .catch(error => {
-        this.err = error.message;
-      });
+  created() {
+    ChatService.getAllUserChats().then( res => {
+      this.myChatList = res.data
+    })
+  },
+  watch: {
+    myChatList: function (val, oldVal) {
+      console.log(this.myChatList)
+      this.openChatRoom(this.myChatList[0]._id)
+    }
   },
   methods: {
-    openChatRoom(receiver_id) {
-      const chatRoom = {
-        emitBy: this.isUserConnected.firstname,
-        content: `${this.isUserConnected.firstname} est en train d'ecrire ... `
-      };
-      ChatService.createChat(chatRoom)
-        .then(response => {
-          this.$router.push({
-            name: "ChatRoom",
-            params: { id: response.data.chat._id, receiver_id }
-          });
-        })
-        .catch(err => {
-          this.err = err.message;
-        });
+    openChatRoom(chatRoomId) {
+      this.$emit('openChat',chatRoomId)
     },
     Capitalize(string)
     {
         return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    getUserName(id){
+      
     }
-
   }
 };
 </script>
