@@ -1,16 +1,15 @@
 <template>
-  <div>
-    <b-table :data="connectedUser" :columns="columns">
-      <template slot-scope="props">
-        <b-table-column label="First name">{{props.row.firstname}}</b-table-column>
-        <b-table-column label="Name">{{props.row.name}}</b-table-column>
-        <b-table-column label="Email">{{props.row.email}}</b-table-column>
-        <b-table-column label="isConnected">{{props.row.isConnected}}</b-table-column>
-        <b-button @click="openChatRoom(props.row._id)" type="is-success">Join</b-button>
-      </template>
-    </b-table>
+  <div id='chatList' >
+    <h4 class="title is-4" style="text-align: center;"> Mes Messages </h4>
+    <div v-for='chat in connectedUser' v-bind:key="chat.id" v-bind:chat="chat">
+      <div class='chatPreview'>
+        <p class="title is-6">{{ Capitalize(chat.firstname) }} {{ Capitalize(chat.name) }}</p>
+        <p class="subtitle is-6" >Le dernier message envoyé par le contact ... </p>
+      </div>
+    </div>
   </div>
 </template>
+
 <script>
 import ChatService from "../services/Chat";
 import UserService from "../services/User";
@@ -24,26 +23,8 @@ export default {
       connectedUser: [],
       disconnectedUser: [],
       user: [],
-      socket: io(window.location.hostname),
-      err: "",
-      columns: [
-        {
-          field: "firstname",
-          label: "First Name"
-        },
-        {
-          field: "name",
-          label: "Last Name"
-        },
-        {
-          field: "email",
-          label: "Email"
-        },
-        {
-          field: "isConnected",
-          label: "Connected"
-        }
-      ]
+      socket: io(window.location.hostname + ":3000"),
+      err: ""
     };
   },
   async created() {
@@ -65,8 +46,6 @@ export default {
   methods: {
     openChatRoom(receiver_id) {
       const chatRoom = {
-        receiver: receiver_id,
-        sender: this.isUserConnected._id,
         emitBy: this.isUserConnected.firstname,
         content: `${this.isUserConnected.firstname} est en train d'ecrire ... `
       };
@@ -80,7 +59,28 @@ export default {
         .catch(err => {
           this.err = err.message;
         });
+    },
+    Capitalize(string)
+    {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
+
   }
 };
 </script>
+
+<style scoped>
+.chatPreview {
+  border-bottom: 1px solid lightgray;
+  min-height: 3em;
+  padding: 1em;
+}
+.chatPreview:hover {
+  background-color: lightgray;
+  font-weight: bold;
+  cursor: pointer;
+}
+#chatList {
+  text-align: left;
+}
+</style>

@@ -1,6 +1,9 @@
 import axios from 'axios';
 
 axios.defaults.baseURL = 'https://speed-alternance.herokuapp.com/api';
+axios.defaults.headers.common['Authorization'] = localStorage.access_token
+  ? localStorage.access_token
+  : null;
 
 class ChatService {
   static getAllChat() {
