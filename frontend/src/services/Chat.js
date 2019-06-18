@@ -2,7 +2,7 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://speed-alternance.herokuapp.com/api';
 axios.defaults.headers.common['Authorization'] = localStorage.access_token
-  ? "Bearer "+ localStorage.access_token
+  ? 'Bearer ' + localStorage.access_token
   : null;
 
 class ChatService {
@@ -12,7 +12,7 @@ class ChatService {
   static createChat(chat) {
     return axios.post('/chatRoom/', chat);
   }
-  static getAllUserChats(){
+  static getAllUserChats() {
     return axios.get('/chatRoom/user');
   }
 
@@ -24,7 +24,7 @@ class ChatService {
     return axios.put(`/chatRoom/${id}`, chat);
   }
 
-  static getMyChat(){
+  static getMyChat() {
     return axios.get('/chatRoom/user');
   }
 }
